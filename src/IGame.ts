@@ -10,6 +10,5 @@ export interface GameState {
     player: Position,
     boxes: Position[],
     map: string,
-
     targets: Position[]
 }
