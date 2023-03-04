@@ -22,6 +22,9 @@ export default class Game extends React.Component<GameProps, GameState> {
     }
     constructor(props: GameProps) {
         super(props);
+
+        console.log("constructor");//
+
         const mapToParse = map1;
         this.height = mapToParse.length + 2;
         console.assert(this.height, "Height can only be non negative integer");
@@ -29,9 +32,9 @@ export default class Game extends React.Component<GameProps, GameState> {
         console.assert(mapToParse.every(it => it.length === this.width - 2), "Each row has to be same size" + mapToParse);
 
         let map = "";
-            map += 'W'.repeat(this.width);
-            map += mapToParse.reduce((prev, now) => `${prev}W${now}W`, '');
-            map += 'W'.repeat(this.width);
+        map += 'W'.repeat(this.width);
+        map += mapToParse.reduce((prev, now) => `${prev}W${now}W`, '');
+        map += 'W'.repeat(this.width);
 
         const boxes: Position[] = [];
         const targets: Position[] = [];
@@ -56,13 +59,25 @@ export default class Game extends React.Component<GameProps, GameState> {
             boxes: boxes,
             targets: targets
         }
+        console.log(this.state);
     }
+
+    componentWillUnmount() {
+        document.removeEventListener("keydown", this.handleKeyDown);
+        document.removeEventListener("touchstart",  this.handleTouchStart);
+    }
+
     componentDidMount() {
         document.addEventListener("keydown", this.handleKeyDown);
+        document.addEventListener("touchstart",  this.handleTouchStart);
     }
 
     private isWin() : boolean {
-        return this.state.targets.every(box => this.state.boxes.some(target => target.x === box.x && target.y === box.y));
+        // Every Target Is Covered By Box
+        console.log(JSON.stringify(this.state))//
+        return this.state.targets.every(
+            box => this.state.boxes.some(target => target.x === box.x && target.y === box.y)
+        );
     }
 
     private move(position: Position, direction: Direction) : Position | null {
@@ -122,7 +137,6 @@ export default class Game extends React.Component<GameProps, GameState> {
                         }
                     }
                 }
-
                 // Box did move, update state
                 this.state.boxes[i] = newBoxPosition;
             }
@@ -160,6 +174,36 @@ export default class Game extends React.Component<GameProps, GameState> {
         }
     }
 
+    protected handleTouchStart = (event: TouchEvent) => {
+        let target = event.target as HTMLElement;
+        if (target instanceof HTMLSpanElement) {
+            target = target.parentElement as HTMLElement;
+        }
+        let grid = target.parentElement as HTMLElement;
+        if (grid === null || !grid.children) return;
+
+        for (let i = 0; i < grid.children.length; ++i) {
+            const child = grid.children[i];
+            if (child !== target) continue
+
+            const cell = {x: i % this.width, y: ~~(i / this.width)};
+            const player = this.state.player;
+
+            if (cell.x === player.x && cell.y === player.y) {
+                return;
+            }
+            if (cell.x === player.x) {
+                this.movePlayer(
+                    cell.y > player.y ? Direction.SOUTH : Direction.NORTH
+                )
+            } else if (cell.y === player.y) {
+                this.movePlayer(
+                    cell.x > player.x ? Direction.EAST : Direction.WEST
+                )
+            }
+        }
+    }
+
     render() {
         const svgBgMap: Record<string, string> = {
             "W": `url(${brickWall})`,
@@ -177,7 +221,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                 }
             }>
                 {this.state.map.split('').map((element, i) => {
-                    return <div className="cell" style={{
+                    return <div className="cell" key={i} style={{
                         background: element === 'W' ? svgBgMap['W'] : '#95a5a6',
                         height: `min(calc(100dvh / ${this.height}), calc(100dvw / ${this.width}))`,
                     }}>
