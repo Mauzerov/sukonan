@@ -1,12 +1,16 @@
 import React from 'react';
+import {render} from "react-dom";
 import { useState, useEffect } from "react";
-import {default as map1} from "./maps/1.json";
+import {default as map1} from "./maps/2.json";
 import crate from "./crate.svg";
 import brickWall from "./brick-wall.svg";
 import worker from "./worker.svg";
+import refresh from "./refresh.svg";
+import info from "./info.svg";
 import { Position, GameState, GameProps } from './IGame';
-import Direction from './Direction';
+import Direction, { opposite } from './Direction';
 import './Game.scss';
+import {Credits} from "./Credits";
 
 
 export default class Game extends React.Component<GameProps, GameState> {
@@ -95,7 +99,7 @@ export default class Game extends React.Component<GameProps, GameState> {
 
         // Wall Collision
         if (this.state.map[newPosition.x + newPosition.y * this.width] === 'W') {
-            return null; // return old position
+            return null;
         }
         return newPosition;
     }
@@ -104,6 +108,7 @@ export default class Game extends React.Component<GameProps, GameState> {
     private movePlayer = (direction: Direction) : boolean => {
         let nextPosition = this.move(this.state.player, direction);
 
+        // Wall Collision
         if (nextPosition === null) {
             return false;
         }
@@ -114,14 +119,12 @@ export default class Game extends React.Component<GameProps, GameState> {
                     continue;
                 }
                 const box = this.state.boxes[i];
-
                 // if box is not in position continue
                 if (box.x !== position.x || box.y !== position.y) {
                     continue;
                 }
 
                 const newBoxPosition = this.move(box, direction);
-
                 if (newBoxPosition === null) {
                     console.log("box(es) didn't move (wall)", box, position);
                     return false;
@@ -144,6 +147,18 @@ export default class Game extends React.Component<GameProps, GameState> {
         }
 
         if (!moveBoxes(nextPosition, direction)) return false;
+
+        // Pull box if behind
+        const behind = this.move(this.state.player, opposite(direction));
+        // Todo: add a switch to enable/disable this feature
+        if (behind !== null) {
+            for (let i = 0; i < this.state.boxes.length; ++i) {
+                const box = this.state.boxes[i];
+                if (box.x === behind.x && box.y === behind.y) {
+                    this.state.boxes[i] = this.state.player;
+                }
+            }
+        }
 
         this.setState(() => ({
             player: nextPosition!,
@@ -205,45 +220,101 @@ export default class Game extends React.Component<GameProps, GameState> {
     }
 
     render() {
-        const svgBgMap: Record<string, string> = {
-            "W": `url(${brickWall})`,
-            "B": `url(${crate})`,
-        }
-
         const pp = this.state.player;
         return (
+            <div>
             <div style={
                 {
                     display: 'grid',
-                    gridTemplate: `repeat(${this.height}, 1fr) / repeat(${this.width}, 1fr)`,
+                    gridTemplate: `repeat(${this.height}, min(
+                                    calc(100dvh / ${this.height}),
+                                    calc(100dvw / ${this.width})
+                                )) / repeat(${this.width}, auto)`,
                     width: 'fit-content',
                     background: "black"
                 }
             }>
                 {this.state.map.split('').map((element, i) => {
+                    if (i === this.width - 2) { // Restart button
+                        return (
+                            <div className="cell" key={i} style={{
+                                backgroundImage: `url(${brickWall})`
+                            }}>
+                                <button style={
+                                    {
+                                        border: 'none',
+                                        background: 'transparent',
+                                        backgroundImage: `url(${refresh})`,
+                                        backgroundSize: 'contain',
+                                        height: '100%',
+                                        width: '100%',
+                                        cursor: 'pointer',
+                                    }
+                                } title="Restart"></button>
+                            </div>
+                        )
+                    }
+
+                    if (i === 3) { // Info button
+                        return (
+                            <div className="cell" key={i} style={{
+                                backgroundImage: `url(${brickWall})`
+                            }}
+                                    onClick={
+                                () => {
+                                    // render(document.getElementById('root')!, <Credits/>)
+                                }
+                                }
+                            >
+                                <button style={
+                                    {
+                                        border: 'none',
+                                        background: 'transparent',
+                                        backgroundImage: `url(${info})`,
+                                        backgroundSize: 'contain',
+                                        height: '100%',
+                                        width: '100%',
+                                        cursor: 'pointer',
+                                    }}
+                                        title="Info"
+                                ></button>
+                            </div>
+                        )
+                    }
+
                     return <div className="cell" key={i} style={{
-                        background: element === 'W' ? svgBgMap['W'] : '#95a5a6',
-                        height: `min(calc(100dvh / ${this.height}), calc(100dvw / ${this.width}))`,
+                        background: element === 'W' ? `url(${brickWall})` : '#95a5a6',
+                        zIndex: this.width * this.height - i,
                     }}>
                         { /* player */ }
                         { i === pp.x + pp.y * (this.width) && <span style={{
                             backgroundImage: `url(${worker})`,
                             zIndex: 2
                         }}></span>}
+
                         { /* boxes */ }
                         { this.state.targets.some(it => it.x + it.y * this.width === i) && <span style={{
                             backgroundImage: `url(${crate})`,
                             opacity: '0.5'
                         }}></span>}
+
                         { /* targets */ }
                         { this.state.boxes.some(it => it.x + it.y * this.width === i) && <span style={{
                             backgroundImage: `url(${crate})`,
                         }}></span>}
 
-
+                        { /* title */ }
+                        { (i === 0) && <span style={{
+                            margin: 0,
+                            fontSize:  `min(
+                                calc(100dvh / ${this.height} / 1.5),
+                                calc(100dvw / ${this.width} / 1.5)
+                            )`,
+                            color: 'white',
+                        }}>Sukanob</span>}
                     </div>
                 })}
-            </div>
+            </div><Credits/></div>
         );
     }
 }
