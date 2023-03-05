@@ -1,9 +1,8 @@
-//.player {
-//  background: url("./worker.svg") !important;
-//}
 
-div {
-  max-height: 100dvmin;
+nav {
+  span {
+    color: azure;
+  }
 }
 
 .cell {
@@ -16,5 +15,18 @@ div {
     position: absolute;
     inset: 0;
     z-index: 1;
+  }
+}
+
+.credits {
+  position: absolute;
+  inset: 0;
+  padding: 10em;
+  margin: auto;
+  z-index: 10000;
+  background: rgb(0 0 0 / .9);
+  p, h1 {
+    color: azure;
+    //font-size: 0.5rem;
   }
 }
