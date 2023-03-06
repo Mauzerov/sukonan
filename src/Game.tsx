@@ -16,14 +16,7 @@ import {Credits} from "./Credits";
 export default class Game extends React.Component<GameProps, GameState> {
     protected height: number;
     protected width: number;
-    state: GameState = {
-        player: {
-            x: 0, y: 0
-        },
-        map: "",
-        boxes: [],
-        targets: []
-    }
+
     constructor(props: GameProps) {
         super(props);
 
@@ -61,7 +54,8 @@ export default class Game extends React.Component<GameProps, GameState> {
                 y: ~~(startPosition / this.width)
             },
             boxes: boxes,
-            targets: targets
+            targets: targets,
+            credits: false
         }
         console.log(this.state);
     }
@@ -221,17 +215,23 @@ export default class Game extends React.Component<GameProps, GameState> {
 
     render() {
         const pp = this.state.player;
+
         return (
-            <div>
+            <div style={
+                {
+                    position: 'relative',
+                    "--cell-size": `min(
+                                    calc(100dvh / ${this.height}),
+                                    calc(100dvw / ${this.width})
+                                )`,
+                } as React.CSSProperties
+            }>
             <div style={
                 {
                     display: 'grid',
-                    gridTemplate: `repeat(${this.height}, min(
-                                    calc(100dvh / ${this.height}),
-                                    calc(100dvw / ${this.width})
-                                )) / repeat(${this.width}, auto)`,
+                    gridTemplate: `repeat(${this.height}, var(--cell-size)) / repeat(${this.width}, auto)`,
                     width: 'fit-content',
-                    background: "black"
+                    background: "black",
                 }
             }>
                 {this.state.map.split('').map((element, i) => {
@@ -261,9 +261,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                                 backgroundImage: `url(${brickWall})`
                             }}
                                     onClick={
-                                () => {
-                                    // render(document.getElementById('root')!, <Credits/>)
-                                }
+                                () => this.setState({ credits: !this.state.credits })
                                 }
                             >
                                 <button style={
@@ -314,7 +312,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                         }}>Sukanob</span>}
                     </div>
                 })}
-            </div><Credits/></div>
+            </div>{<Credits visible={this.state.credits}/>}</div>
         );
     }
 }
