@@ -1,7 +1,7 @@
 import React from 'react';
 import {render} from "react-dom";
 import { useState, useEffect } from "react";
-import {default as map1} from "./maps/2.json";
+import {default as map1} from "./maps/1.json";
 import crate from "./crate.svg";
 import brickWall from "./brick-wall.svg";
 import worker from "./worker.svg";
@@ -11,18 +11,34 @@ import { Position, GameState, GameProps } from './IGame';
 import Direction, { opposite } from './Direction';
 import './Game.scss';
 import {Credits} from "./Credits";
+// filesystem
 
 
 export default class Game extends React.Component<GameProps, GameState> {
-    protected height: number;
-    protected width: number;
+    protected height: number = 0;
+    protected width: number = 0
+
+    private maps: string[][] = [];
+
+    protected isMount: boolean = false;
 
     constructor(props: GameProps) {
         super(props);
+        this.init([require('./maps/1.json'), require('./maps/2.json')]);
+    }
 
+    private init = (maps?: string[][]) => {
         console.log("constructor");//
+        if (maps) {
+            this.maps = maps;
+        }
+        const mapToParse = this.maps.shift();
 
-        const mapToParse = map1;
+        if (!mapToParse) {
+            throw new Error("No map to parse");
+        }
+        // this.currentMap = mapToParse;
+
         this.height = mapToParse.length + 2;
         console.assert(this.height, "Height can only be non negative integer");
         this.width = mapToParse[0].length + 2;
@@ -47,7 +63,7 @@ export default class Game extends React.Component<GameProps, GameState> {
         }
 
         const startPosition = map.indexOf('S');
-        this.state = {
+        const newState = {
             map: map.replaceAll(/[^W]/g, ' '),
             player: {
                 x: startPosition % this.width,
@@ -57,17 +73,27 @@ export default class Game extends React.Component<GameProps, GameState> {
             targets: targets,
             credits: false
         }
-        console.log(this.state);
+
+        if (this.isMount) {
+            this.setState(newState);
+            this.render()
+        } else this.state = newState;
+
+        console.log(newState);
     }
 
     componentWillUnmount() {
         document.removeEventListener("keydown", this.handleKeyDown);
         document.removeEventListener("touchstart",  this.handleTouchStart);
+
+        this.isMount = false;
     }
 
     componentDidMount() {
         document.addEventListener("keydown", this.handleKeyDown);
         document.addEventListener("touchstart",  this.handleTouchStart);
+
+        this.isMount = true;
     }
 
     private isWin() : boolean {
@@ -160,6 +186,7 @@ export default class Game extends React.Component<GameProps, GameState> {
         }))
 
         if (this.isWin()) setTimeout(() => {
+            this.init()
             alert("You win!")
         }, 0);
 
@@ -239,7 +266,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                         return (
                             <div className="cell" key={i} style={{
                                 backgroundImage: `url(${brickWall})`
-                            }}>
+                            }} onClick={() => this.init()}>
                                 <button style={
                                     {
                                         border: 'none',
@@ -259,8 +286,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                         return (
                             <div className="cell" key={i} style={{
                                 backgroundImage: `url(${brickWall})`
-                            }}
-                                    onClick={
+                            }} onClick={
                                 () => this.setState({ credits: !this.state.credits })
                                 }
                             >
