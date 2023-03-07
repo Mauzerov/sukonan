@@ -11,7 +11,7 @@ import { Position, GameState, GameProps } from './IGame';
 import Direction, { opposite } from './Direction';
 import './Game.scss';
 import {Credits} from "./Credits";
-// filesystem
+
 
 
 export default class Game extends React.Component<GameProps, GameState> {
@@ -37,7 +37,6 @@ export default class Game extends React.Component<GameProps, GameState> {
         if (!mapToParse) {
             throw new Error("No map to parse");
         }
-        // this.currentMap = mapToParse;
 
         this.height = mapToParse.length + 2;
         console.assert(this.height, "Height can only be non negative integer");
@@ -269,15 +268,9 @@ export default class Game extends React.Component<GameProps, GameState> {
                             }} onClick={() => this.init()}>
                                 <button style={
                                     {
-                                        border: 'none',
-                                        background: 'transparent',
                                         backgroundImage: `url(${refresh})`,
-                                        backgroundSize: 'contain',
-                                        height: '100%',
-                                        width: '100%',
-                                        cursor: 'pointer',
                                     }
-                                } title="Restart"></button>
+                                } className="btn-reset" title="Restart"></button>
                             </div>
                         )
                     }
@@ -292,15 +285,8 @@ export default class Game extends React.Component<GameProps, GameState> {
                             >
                                 <button style={
                                     {
-                                        border: 'none',
-                                        background: 'transparent',
-                                        backgroundImage: `url(${info})`,
-                                        backgroundSize: 'contain',
-                                        height: '100%',
-                                        width: '100%',
-                                        cursor: 'pointer',
-                                    }}
-                                        title="Info"
+                                       backgroundImage: `url(${info})`,
+                                    }} className="btn-reset" title="Info"
                                 ></button>
                             </div>
                         )
