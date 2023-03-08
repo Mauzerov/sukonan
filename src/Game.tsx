@@ -19,34 +19,26 @@ export default class Game extends React.Component<GameProps, GameState> {
     protected width: number = 0
 
     private maps: string[][] = [];
-
+    private map: string[] = [];
     protected isMount: boolean = false;
 
     constructor(props: GameProps) {
         super(props);
         this.init([require('./maps/1.json'), require('./maps/2.json')]);
     }
-
-    private init = (maps?: string[][]) => {
-        console.log("constructor");//
-        if (maps) {
-            this.maps = maps;
-        }
-        const mapToParse = this.maps.shift();
-
-        if (!mapToParse) {
-            throw new Error("No map to parse");
-        }
-
+    private configureMap(mapToParse: string[]) {
+	console.log("m", mapToParse) 
         this.height = mapToParse.length + 2;
         console.assert(this.height, "Height can only be non negative integer");
         this.width = mapToParse[0].length + 2;
-        console.assert(mapToParse.every(it => it.length === this.width - 2), "Each row has to be same size" + mapToParse);
+        console.assert(mapToParse.every(it => it.length === this.width - 2), "Each row has to be same size" + mapToParse);       
 
         let map = "";
-        map += 'W'.repeat(this.width);
-        map += mapToParse.reduce((prev, now) => `${prev}W${now}W`, '');
-        map += 'W'.repeat(this.width);
+            map += 'W'.repeat(this.width);
+            map += mapToParse.reduce((prev, now) => `${prev}W${now}W`, '');
+            map += 'W'.repeat(this.width);
+
+	this.map = mapToParse;
 
         const boxes: Position[] = [];
         const targets: Position[] = [];
@@ -65,8 +57,8 @@ export default class Game extends React.Component<GameProps, GameState> {
         const newState = {
             map: map.replaceAll(/[^W]/g, ' '),
             player: {
-                x: startPosition % this.width,
-                y: ~~(startPosition / this.width)
+	        x: startPosition % this.width,
+	        y: ~~(startPosition / this.width)
             },
             boxes: boxes,
             targets: targets,
@@ -77,8 +69,20 @@ export default class Game extends React.Component<GameProps, GameState> {
             this.setState(newState);
             this.render()
         } else this.state = newState;
+            console.log(newState);
+    }
+    private init = (maps?: string[][]) => {
+        console.log("constructor");//
+        if (maps) {
+            this.maps = maps;
+        }
+        const mapToParse = this.maps.shift();
 
-        console.log(newState);
+        if (!mapToParse) {
+            throw new Error("No map to parse");
+        }
+
+        this.configureMap(mapToParse);
     }
 
     componentWillUnmount() {
@@ -185,7 +189,7 @@ export default class Game extends React.Component<GameProps, GameState> {
         }))
 
         if (this.isWin()) setTimeout(() => {
-            this.init()
+            this.init();
             alert("You win!")
         }, 0);
 
@@ -265,7 +269,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                         return (
                             <div className="cell" key={i} style={{
                                 backgroundImage: `url(${brickWall})`
-                            }} onClick={() => this.init()}>
+                            }} onClick={() => this.configureMap(this.map)}>
                                 <button style={
                                     {
                                         backgroundImage: `url(${refresh})`,
