@@ -1,7 +1,7 @@
 import React from 'react';
 import {render} from "react-dom";
 import { useState, useEffect } from "react";
-import {default as map1} from "./maps/2.json";
+import {default as map1} from "./maps/1.json";
 import crate from "./crate.svg";
 import brickWall from "./brick-wall.svg";
 import worker from "./worker.svg";
