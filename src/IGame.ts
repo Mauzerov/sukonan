@@ -1,3 +1,5 @@
+import KeyMap from "./KeyMap";
+
 export interface Position {
     x: number,
     y: number
@@ -12,4 +14,5 @@ export interface GameState {
     map: string,
     targets: Position[],
     credits: boolean,
+    keyMap: KeyMap,
 }

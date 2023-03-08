@@ -7,7 +7,8 @@ import info from "./info.svg";
 import { Position, GameState, GameProps } from './IGame';
 import Direction, { opposite } from './Direction';
 import './Game.scss';
-import {Credits} from "./Credits";
+import {GameMenu} from "./GameMenu";
+import KeyMap, {defaultKeyMap} from "./KeyMap";
 
 
 
@@ -24,7 +25,7 @@ export default class Game extends React.Component<GameProps, GameState> {
         this.init([require('./maps/1.json'), require('./maps/2.json')]);
     }
     private configureMap(mapToParse: string[]) {
-	console.log("m", mapToParse) 
+        console.log("m", mapToParse)
         this.height = mapToParse.length + 2;
         console.assert(this.height, "Height can only be non negative integer");
         this.width = mapToParse[0].length + 2;
@@ -35,7 +36,7 @@ export default class Game extends React.Component<GameProps, GameState> {
             map += mapToParse.reduce((prev, now) => `${prev}W${now}W`, '');
             map += 'W'.repeat(this.width);
 
-	this.map = mapToParse;
+	    this.map = mapToParse;
 
         const boxes: Position[] = [];
         const targets: Position[] = [];
@@ -59,14 +60,13 @@ export default class Game extends React.Component<GameProps, GameState> {
             },
             boxes: boxes,
             targets: targets,
-            credits: false
+            credits: false,
         }
 
         if (this.isMount) {
             this.setState(newState);
             this.render()
-        } else this.state = newState;
-            console.log(newState);
+        } else this.state = { ...newState, keyMap: defaultKeyMap};
     }
     private init = (maps?: string[][]) => {
         console.log("constructor");
@@ -98,7 +98,6 @@ export default class Game extends React.Component<GameProps, GameState> {
 
     private isWin() : boolean {
         // Every Target Is Covered By Box
-        console.log(JSON.stringify(this.state))//
         return this.state.targets.every(
             box => this.state.boxes.some(target => target.x === box.x && target.y === box.y)
         );
@@ -198,19 +197,25 @@ export default class Game extends React.Component<GameProps, GameState> {
     }
 
     protected handleKeyDown = (event: KeyboardEvent) => {
-        switch (event.key) {
-            case "w":
-            case "ArrowUp":
-                return this.movePlayer(Direction.NORTH)
-            case "s":
-            case "ArrowDown":
-                return this.movePlayer(Direction.SOUTH)
-            case "a":
-            case "ArrowLeft":
-                return this.movePlayer(Direction.WEST)
-            case "d":
-            case "ArrowRight":
-                return this.movePlayer(Direction.EAST)
+        if (event.code === this.state.keyMap.restart) {
+            return this.configureMap(this.map);
+        }
+
+        if (event.code === this.state.keyMap.menu) {
+            return this.setState({ credits: !this.state.credits });
+        }
+
+        if (this.state.keyMap.up.includes(event.code)) {
+            return this.movePlayer(Direction.NORTH)
+        }
+        if (this.state.keyMap.down.includes(event.code)) {
+            return this.movePlayer(Direction.SOUTH)
+        }
+        if (this.state.keyMap.left.includes(event.code)) {
+            return this.movePlayer(Direction.WEST)
+        }
+        if (this.state.keyMap.right.includes(event.code)) {
+            return this.movePlayer(Direction.EAST)
         }
     }
 
@@ -271,7 +276,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                             <div className="cell" key={i} style={{
                                 backgroundImage: `url(${brickWall})`
                             }} onClick={() => this.configureMap(this.map)}>
-                                <button style={{ backgroundImage: `url(${refresh})` }} className="btn-reset" title="Restart"></button>
+                                <button style={{ backgroundImage: `url(${refresh})` }} className="btn-reset btn" title="Restart"></button>
                             </div>
                         )
                     }
@@ -282,7 +287,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                                 backgroundImage: `url(${brickWall})`
                             }} onClick={() => this.setState({ credits: !this.state.credits })}
                             >
-                                <button style={{backgroundImage: `url(${info})`}} className="btn-reset" title="Info"></button>
+                                <button style={{backgroundImage: `url(${info})`}} className="btn-reset btn" title="Info"></button>
                             </div>
                         )
                     }
@@ -319,7 +324,13 @@ export default class Game extends React.Component<GameProps, GameState> {
                         }}>Sukanob</span>}
                     </div>
                 })}
-            </div>{<Credits visible={this.state.credits}/>}</div>
+            </div>
+            <GameMenu
+                visible={this.state.credits}
+                keymap={this.state.keyMap}
+                onKeyMapChange={(keyMap) => this.setState({ keyMap })}
+            />
+            </div>
         );
     }
 }
