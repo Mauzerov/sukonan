@@ -1,0 +1,26 @@
+.game-menu {
+  position: absolute;
+  inset: 0;
+  inset-block: var(--cell-size);
+  margin: auto;
+  z-index: 10000;
+  background: rgb(0 0 0 / .9);
+  color: azure;;
+  p, h1 {
+    color: azure;
+    //font-size: 0.5rem;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    .control {
+      display: flex;
+      flex-direction: row;
+
+      & > .key {
+        font-weight: bold;
+      }
+    }
+  }
+}

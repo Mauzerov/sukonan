@@ -18,18 +18,7 @@ nav {
   }
 }
 
-.credits {
-  position: absolute;
-  inset: 0;
-  inset-block: var(--cell-size);
-  margin: auto;
-  z-index: 10000;
-  background: rgb(0 0 0 / .9);
-  p, h1 {
-    color: azure;
-    //font-size: 0.5rem;
-  }
-}
+
 
 .btn-reset {
   border: none;
@@ -38,4 +27,13 @@ nav {
   height: 100%;
   width: 100%;
   cursor: pointer;
+  padding: 0;
+  margin: 0;
+  display: inherit;
+}
+
+.btn {
+  width: 50%;
+  height: 50%;
+  margin: 25% auto auto;
 }
