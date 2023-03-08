@@ -1,7 +1,4 @@
 import React from 'react';
-import {render} from "react-dom";
-import { useState, useEffect } from "react";
-import {default as map1} from "./maps/1.json";
 import crate from "./crate.svg";
 import brickWall from "./brick-wall.svg";
 import worker from "./worker.svg";
@@ -72,7 +69,7 @@ export default class Game extends React.Component<GameProps, GameState> {
             console.log(newState);
     }
     private init = (maps?: string[][]) => {
-        console.log("constructor");//
+        console.log("constructor");
         if (maps) {
             this.maps = maps;
         }
@@ -189,8 +186,12 @@ export default class Game extends React.Component<GameProps, GameState> {
         }))
 
         if (this.isWin()) setTimeout(() => {
-            this.init();
-            alert("You win!")
+            try {
+                this.init();
+                alert("You win!");
+            } catch {
+		alert("End Of Levels. Good Job! Pag");
+            }
         }, 0);
 
         return true;
@@ -253,7 +254,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                     "--cell-size": `min(
                                     calc(100dvh / ${this.height}),
                                     calc(100dvw / ${this.width})
-                                )`,
+                                   )`,
                 } as React.CSSProperties
             }>
             <div style={
@@ -270,11 +271,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                             <div className="cell" key={i} style={{
                                 backgroundImage: `url(${brickWall})`
                             }} onClick={() => this.configureMap(this.map)}>
-                                <button style={
-                                    {
-                                        backgroundImage: `url(${refresh})`,
-                                    }
-                                } className="btn-reset" title="Restart"></button>
+                                <button style={{ backgroundImage: `url(${refresh})` }} className="btn-reset" title="Restart"></button>
                             </div>
                         )
                     }
@@ -283,15 +280,9 @@ export default class Game extends React.Component<GameProps, GameState> {
                         return (
                             <div className="cell" key={i} style={{
                                 backgroundImage: `url(${brickWall})`
-                            }} onClick={
-                                () => this.setState({ credits: !this.state.credits })
-                                }
+                            }} onClick={() => this.setState({ credits: !this.state.credits })}
                             >
-                                <button style={
-                                    {
-                                       backgroundImage: `url(${info})`,
-                                    }} className="btn-reset" title="Info"
-                                ></button>
+                                <button style={{backgroundImage: `url(${info})`}} className="btn-reset" title="Info"></button>
                             </div>
                         )
                     }
@@ -301,7 +292,7 @@ export default class Game extends React.Component<GameProps, GameState> {
                         zIndex: this.width * this.height - i,
                     }}>
                         { /* player */ }
-                        { i === pp.x + pp.y * (this.width) && <span style={{
+                        { (i === pp.x + pp.y * (this.width)) && <span style={{
                             backgroundImage: `url(${worker})`,
                             zIndex: 2
                         }}></span>}
