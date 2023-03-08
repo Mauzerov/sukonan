@@ -13,16 +13,31 @@ import './Game.scss';
 import {Credits} from "./Credits";
 
 
+
 export default class Game extends React.Component<GameProps, GameState> {
-    protected height: number;
-    protected width: number;
+    protected height: number = 0;
+    protected width: number = 0
+
+    private maps: string[][] = [];
+
+    protected isMount: boolean = false;
 
     constructor(props: GameProps) {
         super(props);
+        this.init([require('./maps/1.json'), require('./maps/2.json')]);
+    }
 
+    private init = (maps?: string[][]) => {
         console.log("constructor");//
+        if (maps) {
+            this.maps = maps;
+        }
+        const mapToParse = this.maps.shift();
 
-        const mapToParse = map1;
+        if (!mapToParse) {
+            throw new Error("No map to parse");
+        }
+
         this.height = mapToParse.length + 2;
         console.assert(this.height, "Height can only be non negative integer");
         this.width = mapToParse[0].length + 2;
@@ -47,7 +62,7 @@ export default class Game extends React.Component<GameProps, GameState> {
         }
 
         const startPosition = map.indexOf('S');
-        this.state = {
+        const newState = {
             map: map.replaceAll(/[^W]/g, ' '),
             player: {
                 x: startPosition % this.width,
@@ -57,17 +72,27 @@ export default class Game extends React.Component<GameProps, GameState> {
             targets: targets,
             credits: false
         }
-        console.log(this.state);
+
+        if (this.isMount) {
+            this.setState(newState);
+            this.render()
+        } else this.state = newState;
+
+        console.log(newState);
     }
 
     componentWillUnmount() {
         document.removeEventListener("keydown", this.handleKeyDown);
         document.removeEventListener("touchstart",  this.handleTouchStart);
+
+        this.isMount = false;
     }
 
     componentDidMount() {
         document.addEventListener("keydown", this.handleKeyDown);
         document.addEventListener("touchstart",  this.handleTouchStart);
+
+        this.isMount = true;
     }
 
     private isWin() : boolean {
@@ -160,6 +185,7 @@ export default class Game extends React.Component<GameProps, GameState> {
         }))
 
         if (this.isWin()) setTimeout(() => {
+            this.init()
             alert("You win!")
         }, 0);
 
@@ -239,18 +265,12 @@ export default class Game extends React.Component<GameProps, GameState> {
                         return (
                             <div className="cell" key={i} style={{
                                 backgroundImage: `url(${brickWall})`
-                            }}>
+                            }} onClick={() => this.init()}>
                                 <button style={
                                     {
-                                        border: 'none',
-                                        background: 'transparent',
                                         backgroundImage: `url(${refresh})`,
-                                        backgroundSize: 'contain',
-                                        height: '100%',
-                                        width: '100%',
-                                        cursor: 'pointer',
                                     }
-                                } title="Restart"></button>
+                                } className="btn-reset" title="Restart"></button>
                             </div>
                         )
                     }
@@ -259,22 +279,14 @@ export default class Game extends React.Component<GameProps, GameState> {
                         return (
                             <div className="cell" key={i} style={{
                                 backgroundImage: `url(${brickWall})`
-                            }}
-                                    onClick={
+                            }} onClick={
                                 () => this.setState({ credits: !this.state.credits })
                                 }
                             >
                                 <button style={
                                     {
-                                        border: 'none',
-                                        background: 'transparent',
-                                        backgroundImage: `url(${info})`,
-                                        backgroundSize: 'contain',
-                                        height: '100%',
-                                        width: '100%',
-                                        cursor: 'pointer',
-                                    }}
-                                        title="Info"
+                                       backgroundImage: `url(${info})`,
+                                    }} className="btn-reset" title="Info"
                                 ></button>
                             </div>
                         )
