@@ -4,12 +4,14 @@ import brickWall from "./brick-wall.svg";
 import worker from "./worker.svg";
 import refresh from "./refresh.svg";
 import info from "./info.svg";
+import { ReactComponent as Typhoon } from "./typhoon.svg";
 import { Position, GameState, GameProps } from './IGame';
 import Direction, { opposite } from './Direction';
 import './Game.scss';
 import {GameMenu} from "./GameMenu";
 import KeyMap, {defaultKeyMap} from "./KeyMap";
 import Teleporter, {PorterColors} from "./Teleporter";
+import {overlap} from "./Util";
 
 
 export default class Game extends React.Component<GameProps, GameState> {
@@ -179,18 +181,17 @@ export default class Game extends React.Component<GameProps, GameState> {
 
         if (!moveBoxes(nextPosition, direction)) return false;
 
-        for (let {blue, orange} of this.state.porters) {
-             const blueIndex = blue.x + blue.y * this.width;
-             const orangeIndex = orange.x + orange.y * this.width;
+        for (let { blue, orange } of this.state.porters) {
+             const blueIndex   = blue.x         + blue.y         * this.width;
+             const orangeIndex = orange.x       + orange.y       * this.width;
              const playerIndex = nextPosition.x + nextPosition.y * this.width;
-           
-             // Todo: add box in teleporter collision check
-             if (blueIndex === playerIndex) nextPosition = orange;
-             if (orangeIndex === playerIndex) nextPosition = blue;
+
+             if (blueIndex   === playerIndex && !overlap(orange, this.state.boxes)) nextPosition = orange;
+             if (orangeIndex === playerIndex && !overlap(blue, this.state.boxes)  ) nextPosition = blue;
         }
         // Pull box if behind
         const behind = this.move(this.state.player, opposite(direction));
-        // Todo: add a switch to enable/disable this feature
+
         if (behind !== null) {
             for (let i = 0; i < this.state.boxes.length; ++i) {
                 const box = this.state.boxes[i];
@@ -322,9 +323,14 @@ export default class Game extends React.Component<GameProps, GameState> {
                     }
 
                     return <div className="cell" key={i} style={{
-                        background: element === 'W' ? `url(${brickWall})` : (isPorter(i) ?? '#95a5a6'),
+                        background: element === 'W' ? `url(${brickWall})` : '#95a5a6',
                         zIndex: this.width * this.height - i,
                     }}>
+                        { /* porter */ }
+                        { isPorter(i) && <span style={
+                            {padding: 'calc(var(--cell-size) / 8)'}
+                        }><Typhoon style={{fill: isPorter(i)}}/></span>}
+
                         { /* player */ }
                         { (i === pp.x + pp.y * (this.width)) && <span style={{
                             backgroundImage: `url(${worker})`,

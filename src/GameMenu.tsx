@@ -72,6 +72,7 @@ export function GameMenu(props : {
                 <ul>
                     <li>Help Icon: @HashiCorp</li>
                     <li>Restart Icon: @Ionicons</li>
+                    <li>Teleporter Spiral Icon: @game-icons.net</li>
                 </ul>
             </p>
         </div>
