@@ -1,4 +1,5 @@
 import KeyMap from "./KeyMap";
+import Teleporter from "./Teleporter";
 
 export interface Position {
     x: number,
@@ -15,4 +16,5 @@ export interface GameState {
     targets: Position[],
     credits: boolean,
     keyMap: KeyMap,
+    porters: Teleporter[],
 }

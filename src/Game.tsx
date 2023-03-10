@@ -9,7 +9,7 @@ import Direction, { opposite } from './Direction';
 import './Game.scss';
 import {GameMenu} from "./GameMenu";
 import KeyMap, {defaultKeyMap} from "./KeyMap";
-
+import Teleporter, {PorterColors} from "./Teleporter";
 
 
 export default class Game extends React.Component<GameProps, GameState> {
@@ -40,17 +40,23 @@ export default class Game extends React.Component<GameProps, GameState> {
 
         const boxes: Position[] = [];
         const targets: Position[] = [];
+        const porters: Record<number, Position[]> = {};
         for (let x = 0; x < this.width; x++) {
             for (let y = 0; y < this.height; y++) {
-                if (map[x + y * this.width] === 'B') {
+                const element = map[x + y * this.width];
+                if (element === 'B') {
                     boxes.push({x, y});
                 }
-                if (map[x + y * this.width] === 'T') {
+                if (element === 'T') {
                     targets.push({x, y});
                 }
+                if (+element > 0 && +element <= 9) {
+                    porters[+element] = porters[+element] || [];
+                    porters[+element].push({x, y});
+                } 
             }
         }
-
+        console.log(porters);
         const startPosition = map.indexOf('S');
         const newState = {
             map: map.replaceAll(/[^W]/g, ' '),
@@ -61,11 +67,18 @@ export default class Game extends React.Component<GameProps, GameState> {
             boxes: boxes,
             targets: targets,
             credits: false,
+            porters: [] as Teleporter[],
         }
 
+        for (let [blue, orange] of Object.values(porters)) {
+            newState.porters.push({
+                blue, orange,
+                color: PorterColors[+map[blue.x + blue.y * this.width] - 1],
+            })
+        }
+	
         if (this.isMount) {
             this.setState(newState);
-            this.render()
         } else this.state = { ...newState, keyMap: defaultKeyMap};
     }
     private init = (maps?: string[][]) => {
@@ -131,7 +144,6 @@ export default class Game extends React.Component<GameProps, GameState> {
         if (nextPosition === null) {
             return false;
         }
-
         const moveBoxes = (position: Position, direction: Direction, boxIndex?:number) : boolean => {
             for (let i = 0; i < this.state.boxes.length; ++i) {
                 if (boxIndex !== undefined && i === boxIndex) {
@@ -167,6 +179,15 @@ export default class Game extends React.Component<GameProps, GameState> {
 
         if (!moveBoxes(nextPosition, direction)) return false;
 
+        for (let {blue, orange} of this.state.porters) {
+             const blueIndex = blue.x + blue.y * this.width;
+             const orangeIndex = orange.x + orange.y * this.width;
+             const playerIndex = nextPosition.x + nextPosition.y * this.width;
+           
+             // Todo: add box in teleporter collision check
+             if (blueIndex === playerIndex) nextPosition = orange;
+             if (orangeIndex === playerIndex) nextPosition = blue;
+        }
         // Pull box if behind
         const behind = this.move(this.state.player, opposite(direction));
         // Todo: add a switch to enable/disable this feature
@@ -291,9 +312,17 @@ export default class Game extends React.Component<GameProps, GameState> {
                             </div>
                         )
                     }
+                    
+                    const isPorter = (index: number) => {
+                        for (let porter of this.state.porters) {
+                            if (porter.blue.x + porter.blue.y * this.width == index) return porter.color || "black";
+                            if (porter.orange.x + porter.orange.y * this.width == index) return porter.color || "black";
+                        }
+                        return undefined;
+                    }
 
                     return <div className="cell" key={i} style={{
-                        background: element === 'W' ? `url(${brickWall})` : '#95a5a6',
+                        background: element === 'W' ? `url(${brickWall})` : (isPorter(i) ?? '#95a5a6'),
                         zIndex: this.width * this.height - i,
                     }}>
                         { /* player */ }
@@ -334,3 +363,4 @@ export default class Game extends React.Component<GameProps, GameState> {
         );
     }
 }
+
