@@ -1,17 +1,20 @@
 import React from 'react';
-import crate from "./crate.svg";
-import brickWall from "./brick-wall.svg";
-import worker from "./worker.svg";
-import refresh from "./refresh.svg";
-import info from "./info.svg";
+import crate from "../svg/crate.svg";
+import brickWall from "../svg/brick-wall.svg";
+import worker from "../svg/worker.svg";
+import refresh from "../svg/refresh.svg";
+import info from "../svg/info.svg";
 import { ReactComponent as Typhoon } from "./typhoon.svg";
-import { Position, GameState, GameProps } from './IGame';
-import Direction, { opposite } from './Direction';
-import './Game.scss';
+import { Position, GameState, GameProps } from '../ts/IGame';
+import Direction, { opposite } from '../ts/Direction';
+import '../styles/Game.scss';
 import {GameMenu} from "./GameMenu";
-import KeyMap, {defaultKeyMap} from "./KeyMap";
-import Teleporter, {PorterColors} from "./Teleporter";
-import {overlap} from "./Util";
+import KeyMap, {defaultKeyMap} from "../ts/KeyMap";
+import Teleporter, {PorterColors} from "../ts/Teleporter";
+import {overlap} from "../util/Util";
+import {Editor} from "./Editor";
+import {MapGrid} from "./MapGrid";
+import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
 
 
 export default class Game extends React.Component<GameProps, GameState> {
@@ -24,7 +27,12 @@ export default class Game extends React.Component<GameProps, GameState> {
 
     constructor(props: GameProps) {
         super(props);
-        this.init([require('./maps/1.json'), require('./maps/2.json')]);
+        this.init(
+            Array.from({length: 3},
+                (_, i) => require(`../maps/${i + 1}.json`)
+            )
+        );
+        // this.init([require('./maps/1.json'), require('./maps/2.json')]);
     }
     private configureMap(mapToParse: string[]) {
         console.log("m", mapToParse)
@@ -40,45 +48,18 @@ export default class Game extends React.Component<GameProps, GameState> {
 
 	    this.map = mapToParse;
 
-        const boxes: Position[] = [];
-        const targets: Position[] = [];
-        const porters: Record<number, Position[]> = {};
-        for (let x = 0; x < this.width; x++) {
-            for (let y = 0; y < this.height; y++) {
-                const element = map[x + y * this.width];
-                if (element === 'B') {
-                    boxes.push({x, y});
-                }
-                if (element === 'T') {
-                    targets.push({x, y});
-                }
-                if (+element > 0 && +element <= 9) {
-                    porters[+element] = porters[+element] || [];
-                    porters[+element].push({x, y});
-                } 
-            }
-        }
-        console.log(porters);
         const startPosition = map.indexOf('S');
         const newState = {
             map: map.replaceAll(/[^W]/g, ' '),
             player: {
-	        x: startPosition % this.width,
-	        y: ~~(startPosition / this.width)
+                x: startPosition % this.width,
+                y: ~~(startPosition / this.width)
             },
-            boxes: boxes,
-            targets: targets,
+            ...filterBoxesAndTargets(map, {x: this.width, y: this.height}),
             credits: false,
-            porters: [] as Teleporter[],
+            porters: filterPorters(map, {x: this.width, y: this.height}),
         }
 
-        for (let [blue, orange] of Object.values(porters)) {
-            newState.porters.push({
-                blue, orange,
-                color: PorterColors[+map[blue.x + blue.y * this.width] - 1],
-            })
-        }
-	
         if (this.isMount) {
             this.setState(newState);
         } else this.state = { ...newState, keyMap: defaultKeyMap};
@@ -284,85 +265,32 @@ export default class Game extends React.Component<GameProps, GameState> {
                                    )`,
                 } as React.CSSProperties
             }>
-            <div style={
-                {
-                    display: 'grid',
-                    gridTemplate: `repeat(${this.height}, var(--cell-size)) / repeat(${this.width}, auto)`,
-                    width: 'fit-content',
-                    background: "black",
-                }
-            }>
-                {this.state.map.split('').map((element, i) => {
-                    if (i === this.width - 2) { // Restart button
-                        return (
-                            <div className="cell" key={i} style={{
-                                backgroundImage: `url(${brickWall})`
-                            }} onClick={() => this.configureMap(this.map)}>
-                                <button style={{ backgroundImage: `url(${refresh})` }} className="btn-reset btn" title="Restart"></button>
-                            </div>
-                        )
-                    }
+                <MapGrid
+                    gameElements={this.state}
+                    map={this.state.map}
+                    gridSize={{x: this.width, y: this.height}}
 
-                    if (i === 3) { // Info button
-                        return (
-                            <div className="cell" key={i} style={{
-                                backgroundImage: `url(${brickWall})`
-                            }} onClick={() => this.setState({ credits: !this.state.credits })}
-                            >
-                                <button style={{backgroundImage: `url(${info})`}} className="btn-reset btn" title="Info"></button>
-                            </div>
-                        )
-                    }
-                    
-                    const isPorter = (index: number) => {
-                        for (let porter of this.state.porters) {
-                            if (porter.blue.x + porter.blue.y * this.width == index) return porter.color || "black";
-                            if (porter.orange.x + porter.orange.y * this.width == index) return porter.color || "black";
+                    custom={
+                        {
+                            [this.width - 2]: (<div
+                                className="cell" key={this.width - 2}
+                                style={{ backgroundImage: `url(${brickWall})`}}
+                                onClick={() => this.configureMap(this.map)}
+                            ><button style={{ backgroundImage: `url(${refresh})` }} className="btn-reset btn" title="Restart"></button>
+                            </div>),
+                            3: (<div
+                                    className="cell" key={3}
+                                    style={{backgroundImage: `url(${brickWall})`}}
+                                    onClick={() => this.setState({ credits: !this.state.credits })}
+                            ><button style={{backgroundImage: `url(${info})`}} className="btn-reset btn" title="Info"></button>
+                            </div>)
                         }
-                        return undefined;
                     }
+                />
 
-                    return <div className="cell" key={i} style={{
-                        background: element === 'W' ? `url(${brickWall})` : '#95a5a6',
-                        zIndex: this.width * this.height - i,
-                    }}>
-                        { /* porter */ }
-                        { isPorter(i) && <span style={
-                            {padding: 'calc(var(--cell-size) / 8)'}
-                        }><Typhoon style={{fill: isPorter(i)}}/></span>}
-
-                        { /* player */ }
-                        { (i === pp.x + pp.y * (this.width)) && <span style={{
-                            backgroundImage: `url(${worker})`,
-                            zIndex: 2
-                        }}></span>}
-
-                        { /* boxes */ }
-                        { this.state.targets.some(it => it.x + it.y * this.width === i) && <span style={{
-                            backgroundImage: `url(${crate})`,
-                            opacity: '0.5'
-                        }}></span>}
-
-                        { /* targets */ }
-                        { this.state.boxes.some(it => it.x + it.y * this.width === i) && <span style={{
-                            backgroundImage: `url(${crate})`,
-                        }}></span>}
-
-                        { /* title */ }
-                        { (i === 0) && <span style={{
-                            margin: 0,
-                            fontSize:  `min(
-                                calc(100dvh / ${this.height} / 1.5),
-                                calc(100dvw / ${this.width} / 1.5)
-                            )`,
-                            color: 'white',
-                        }}>Sukanob</span>}
-                    </div>
-                })}
-            </div>
             <GameMenu
                 visible={this.state.credits}
-                keymap={this.state.keyMap}
+                keymap= {this.state.keyMap}
                 onKeyMapChange={(keyMap) => this.setState({ keyMap })}
             />
             </div>

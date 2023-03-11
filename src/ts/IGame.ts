@@ -9,12 +9,17 @@ export interface Position {
 export interface GameProps {
 }
 
-export interface GameState {
+export interface GameElements {
     player: Position,
     boxes: Position[],
-    map: string,
     targets: Position[],
-    credits: boolean,
-    keyMap: KeyMap,
     porters: Teleporter[],
 }
+
+export interface GameState extends GameElements {
+    map: string,
+    credits: boolean,
+    keyMap: KeyMap,
+}
+
+

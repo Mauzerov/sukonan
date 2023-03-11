@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import Game from './Game';
+import './styles/index.css';
+import Game from './component/Game';
 import reportWebVitals from './reportWebVitals';
+import {Editor} from "./component/Editor";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -10,6 +11,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <Game />
+    <Editor />
   </React.StrictMode>
 );
 

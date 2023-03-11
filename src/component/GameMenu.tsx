@@ -1,5 +1,5 @@
-import "./GameMenu.scss"
-import KeyMap from "./KeyMap";
+import "../styles/GameMenu.scss"
+import KeyMap from "../ts/KeyMap";
 import {useEffect, useState} from "react";
 
 function Control(props: { keyCode: string, onChange: (key: string) => void }) {

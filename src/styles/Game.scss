@@ -38,6 +38,20 @@ nav {
   margin: 25% auto auto;
 }
 
+.btn-size {
+  font-size: 4em;
+  flex: 1;
+  display: block;
+  color: white;
+}
+
+[class*="flex"] {
+  display: flex;
+}
+.flex-row {
+  flex-direction: row;
+}
+
 .orange {
   background: orange !important;
 }
