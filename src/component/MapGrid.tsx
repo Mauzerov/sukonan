@@ -25,8 +25,8 @@ export function MapGrid(props: MapGridProps) {
             {
                 display: 'grid',
                 gridTemplate: `repeat(${props.gridSize.y}, var(--cell-size)) / repeat(${props.gridSize.x}, auto)`,
-                width: 'fit-content',
                 background: "black",
+                // aspectRatio: "1 / 1",
             }
         }>
             {props.map.split('').map((element, i) => {
@@ -92,14 +92,14 @@ export function MapGrid(props: MapGridProps) {
                     }}></span>}
 
                     { /* title */ }
-                    { (i === 0) && <span style={{
-                        margin: 0,
-                        fontSize:  `min(
-                                calc(100dvh / ${props.gridSize.y} / 1.5),
-                                calc(100dvw / ${props.gridSize.x} / 1.5)
-                            )`,
-                        color: 'white',
-                    }}>Sukanob</span>}
+                    {/*{ (i === 0) && <span style={{*/}
+                    {/*    margin: 0,*/}
+                    {/*    fontSize:  `min(*/}
+                    {/*            calc(100dvh / ${props.gridSize.y} / 1.5),*/}
+                    {/*            calc(100dvw / ${props.gridSize.x} / 1.5)*/}
+                    {/*        )`,*/}
+                    {/*    color: 'white',*/}
+                    {/*}}>Sukanob</span>}*/}
                 </div>
             })}
         </div>

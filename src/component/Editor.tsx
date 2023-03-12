@@ -9,16 +9,12 @@ import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
 export class Editor extends React.Component<{}, {
     map: string[],
     size: Position,
+    loading: boolean,
 }> {
-
     static readonly minSize = 5;
-
-    static readonly elements = "WBTS123456789"
-
+    static readonly elements = " WBTS123456789"
     static readonly _defaultMap = "W".repeat(Editor.minSize) + "W   W".repeat(Editor.minSize - 2) +  "W".repeat(Editor.minSize)
-
     static readonly defaultSize = {x: Editor.minSize, y: Editor.minSize}
-
     static readonly defaultMap : string[] = Editor._defaultMap.match(new RegExp(`.{1,${Editor.minSize}}`, 'g'))!
 
     constructor(props: {}) {
@@ -26,13 +22,36 @@ export class Editor extends React.Component<{}, {
         console.log(Editor.defaultMap);
         console.log(Editor._defaultMap);
         console.log(new RegExp(`.{1,${Editor.minSize}}`, 'g'))
-        this.state = { map: Editor.defaultMap, size: {x: Editor.minSize, y: Editor.minSize } }
+        this.state = { map: Editor.defaultMap, size: {x: Editor.minSize, y: Editor.minSize }, loading: false};
+    }
+
+    private importMap = () => {
+        const mapString = prompt("Import map");
+        if (!mapString) return;
+
+        const map = JSON.parse(mapString);
+
+        this.setState({map: map, size: {x: map[0].length, y: map.length}})
+    }
+
+    private exportMap = () => {
+        const map = this.state.map;
+
+        const maps = JSON.parse(localStorage.getItem("sukonan-maps") || "[]");
+
+        alert("Map saved! You can now access it in the game menu.");
+
+        localStorage.setItem("sukonan-maps", JSON.stringify([...maps, map]));
+
+        return JSON.stringify(map);
     }
 
     private nextElement = (element: string, delta: number) => {
         const index = Editor.elements.indexOf(element);
         return Editor.elements[(index + delta + Editor.elements.length) % Editor.elements.length];
     }
+
+
 
     onLeftClick = (index: number) => {
         const x = index % this.state.size.x;
@@ -145,6 +164,18 @@ export class Editor extends React.Component<{}, {
                                      title="Increase Y"
                                      onClick={() => this.extendMap(0, 1)}>+</button>
                              </div>),
+                             [this.state.size.x * this.state.size.y - 1]: (<div
+                                    className="cell flex-row" key={this.state.size.x * this.state.size.y - 1}
+                                    style={{backgroundImage: `url(${brickWall})`,}}>
+                                    <button
+                                        className="btn-reset btn-size"
+                                        title="Import"
+                                        onClick={() => this.importMap()}>Import</button>
+                                 <button
+                                     className="btn-reset btn-size"
+                                     title="Export"
+                                     onClick={() => this.exportMap()}>Export</button>
+                                </div>),
                          }
                      }
             />

@@ -1,0 +1,45 @@
+@mixin button-outline($color) {
+  background-color: transparent;
+  border: 1px solid $color;
+  color: $color;
+  padding: 1em 4em;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.main-menu {
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+  padding: 3em;
+
+  &__title {
+    font-size: 3em;
+    font-weight: bold;
+    margin-bottom: 1em;
+    color: whitesmoke;
+    text-align: center;
+  }
+
+  &__button {
+    &s {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @include button-outline(#a29bfe);
+    margin-block: 1em;
+    transition: all 0.2s ease-in-out;
+    width: 75%;
+
+    &:hover, &:focus {
+      background-color: #a29bfe;
+      color: black;
+      @media (prefers-reduced-motion: no-preference) and (min-width: 450px) {
+        letter-spacing: 5px;
+        width: 100%
+      }
+    }
+  }
+}

@@ -1,17 +1,20 @@
-import React from 'react';
+import React, {useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import Game from './component/Game';
 import reportWebVitals from './reportWebVitals';
 import {Editor} from "./component/Editor";
+import {App} from "./App";
+import {MapPicker} from "./component/MapPicker";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <Game />
-    <Editor />
+      {/*<MapPicker />*/}
+      <App />
   </React.StrictMode>
 );
 
