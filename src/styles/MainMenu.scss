@@ -21,6 +21,7 @@
   }
 
   &__button {
+    text-decoration: none !important;
     &s {
         display: flex;
         flex-direction: column;

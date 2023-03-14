@@ -3,7 +3,11 @@ import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
 import React from "react";
 import "../styles/Game.scss"
 
-export function MapPicker() {
+export function MapPicker(
+    props: {
+        onMapSelect?: (map: string[]) => void
+    }
+) {
     return (
         <div style={{
             display: 'grid',
@@ -22,7 +26,9 @@ export function MapPicker() {
                     <div style={{
                         "--cell-size": `auto`,
                         // aspectRatio: "1 / 1",
-                    } as React.CSSProperties}>
+                    } as React.CSSProperties}
+                    onClick={() => {props.onMapSelect?.(map)}}
+                    >
                         <MapGrid
                             key={i}
                             map={mapString}

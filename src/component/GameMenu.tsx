@@ -46,6 +46,7 @@ export function GameMenu(props : {
                             (key) => {
                                 props.keymap.up[i] = key;
                                 props.onKeyMapChange?.(props.keymap);
+                                console.log(props.keymap)
                             }
                         }/>
                     ))}
@@ -57,6 +58,7 @@ export function GameMenu(props : {
                             (key) => {
                                 props.keymap.down[i] = key;
                                 props.onKeyMapChange?.(props.keymap);
+                                console.log(props.keymap)
                             }
                         }/>
                     ))}

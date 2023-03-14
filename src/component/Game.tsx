@@ -188,6 +188,7 @@ export default class Game extends React.Component<GameProps, GameState> {
         }))
 
         if (this.isWin()) setTimeout(() => {
+            this.props.onWin?.(this.maps.indexOf(this.map));
             try {
                 this.init();
                 alert("You win!");

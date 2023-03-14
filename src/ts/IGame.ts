@@ -7,6 +7,7 @@ export interface Position {
 }
 
 export interface GameProps {
+    onWin?: (mapId: number) => void,
 }
 
 export interface GameElements {
