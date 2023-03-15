@@ -15,23 +15,32 @@ import {overlap} from "../util/Util";
 import {Editor} from "./Editor";
 import {MapGrid} from "./MapGrid";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
+import {useParams} from 'react-router-dom';
 
+interface GameProps2 extends GameProps {
+    map: number
+}
 
-export default class Game extends React.Component<GameProps, GameState> {
+class _Game extends React.Component<GameProps2, GameState> {
     protected height: number = 0;
     protected width: number = 0
+
+    private static campaign = Array.from({length: 3},
+                (_, i) => require(`../maps/${i + 1}.json`)
+            );
 
     private maps: string[][] = [];
     private map: string[] = [];
     protected isMount: boolean = false;
 
-    constructor(props: GameProps) {
+    constructor(props: GameProps2) {
         super(props);
-        this.init(
-            Array.from({length: 3},
-                (_, i) => require(`../maps/${i + 1}.json`)
-            )
-        );
+        console.log(props);
+        this.configureMap(_Game.campaign[props.map]);
+
+        // this.init(
+        //     Game.campaign
+        // );
         // this.init([require('./maps/1.json'), require('./maps/2.json')]);
     }
     private configureMap(mapToParse: string[]) {
@@ -188,10 +197,13 @@ export default class Game extends React.Component<GameProps, GameState> {
         }))
 
         if (this.isWin()) setTimeout(() => {
-            this.props.onWin?.(this.maps.indexOf(this.map));
+            // this.props.onWin?.(this.maps.indexOf(this.map));
             try {
-                this.init();
+                // this.init();
                 alert("You win!");
+                alert(new RegExp(`${this.props.map}$`))
+                window.location.href = window.location.href.replace(
+                    new RegExp(`${this.props.map}$`), `${this.props.map + 1}`);        
             } catch {
 		alert("End Of Levels. Good Job! Pag");
             }
@@ -299,3 +311,12 @@ export default class Game extends React.Component<GameProps, GameState> {
     }
 }
 
+export default function Game(props: GameProps) {
+    const {mapId} = useParams();
+    console.log(+(mapId||"0"))
+    return (
+<>
+    <_Game {...props} map={+(mapId||"0")}/>
+</>
+)
+}

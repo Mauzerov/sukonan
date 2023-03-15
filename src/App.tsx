@@ -5,7 +5,7 @@ import Game from "./component/Game";
 import {GameMenu} from "./component/GameMenu";
 import {defaultKeyMap} from "./ts/KeyMap";
 import {MapPicker} from "./component/MapPicker";
-import {BrowserRouter, Outlet, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Outlet, Route, Routes, Navigate} from "react-router-dom";
 
 export function App() {
     const [playing , setPlaying ] = useState(false);
@@ -27,13 +27,12 @@ export function App() {
             <Routes>
                 <Route path="/" element={<Outlet />}>
                     <Route index element={<MainMenu />} />
-                    <Route path="campaign" element={<Game />}>
-                        <Route path=":mapId" element={<Game />} />
-                    </Route>
+                    <Route path="campaign" element={<Navigate to="/campaign/0" />}/>
+                    <Route path="campaign/:mapId" element={<Game />}/>
                     <Route path="own" element={<MapPicker />} />
                     <Route path="editor" element={<Editor />} />
                     <Route path="settings" element={<GameMenu keymap={keyMap} visible={true} onKeyMapChange={(k) => setKeyMap({...k})}/>} />
-                    <Route path="*" element={<div />} />
+                    <Route path="*" element={<div>404</div>} />
                 </Route>
             </Routes>
         </BrowserRouter>
@@ -63,7 +62,7 @@ export function App() {
                 }}
                 onCredits={() => {}} // TODO
             />}
-            {playing && <Game onWin={(mapId) => console.log(mapId)} />}
+            {playing && <Game onWin={(mapId: number) => console.log(mapId)} />}
             {picking && <MapPicker onMapSelect={(map) => {
                 setPicking(false)
                 console.log(map)
