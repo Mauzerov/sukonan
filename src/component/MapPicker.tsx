@@ -5,7 +5,7 @@ import "../styles/Game.scss"
 
 export function MapPicker(
     props: {
-        onMapSelect?: (map: string[]) => void
+        onMapSelect?: (map: number) => void
     }
 ) {
     return (
@@ -25,9 +25,8 @@ export function MapPicker(
                 return (
                     <div style={{
                         "--cell-size": `auto`,
-                        // aspectRatio: "1 / 1",
                     } as React.CSSProperties}
-                    onClick={() => {props.onMapSelect?.(map)}}
+                    onClick={() => {props.onMapSelect?.(i)}}
                     >
                         <MapGrid
                             key={i}

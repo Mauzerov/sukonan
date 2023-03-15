@@ -35,7 +35,9 @@ export class Editor extends React.Component<{}, {
     }
 
     private exportMap = () => {
-        const map = this.state.map;
+        const map = this.state.map.splice(
+            1, this.state.size.y - 2
+        ).map(it => it.slice(1, this.state.size.x - 1))
 
         const maps = JSON.parse(localStorage.getItem("sukonan-maps") || "[]");
 
@@ -119,6 +121,7 @@ export class Editor extends React.Component<{}, {
             x: playerPosition % this.state.size.x,
             y: ~~(playerPosition / this.state.size.x)
         }
+
         return (
             <div style={
                 {

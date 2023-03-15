@@ -15,7 +15,9 @@ import {overlap} from "../util/Util";
 import {Editor} from "./Editor";
 import {MapGrid} from "./MapGrid";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
-import {useParams} from 'react-router-dom';
+import {Navigate, useParams} from 'react-router-dom';
+import {getLocalData, setLocalData} from "../ts/LocalData";
+import {campaignLevels} from "../ts/const";
 
 interface GameProps2 extends GameProps {
     map: number
@@ -25,10 +27,7 @@ class _Game extends React.Component<GameProps2, GameState> {
     protected height: number = 0;
     protected width: number = 0
 
-    private static campaign = Array.from({length: 3},
-                (_, i) => require(`../maps/${i + 1}.json`)
-            );
-
+    private static campaign = campaignLevels;
     private maps: string[][] = [];
     private map: string[] = [];
     protected isMount: boolean = false;
@@ -36,7 +35,7 @@ class _Game extends React.Component<GameProps2, GameState> {
     constructor(props: GameProps2) {
         super(props);
         console.log(props);
-        this.configureMap(_Game.campaign[props.map]);
+        this.configureMap((props.mapPool || _Game.campaign)[props.map]);
 
         // this.init(
         //     Game.campaign
@@ -197,16 +196,7 @@ class _Game extends React.Component<GameProps2, GameState> {
         }))
 
         if (this.isWin()) setTimeout(() => {
-            // this.props.onWin?.(this.maps.indexOf(this.map));
-            try {
-                // this.init();
-                alert("You win!");
-                alert(new RegExp(`${this.props.map}$`))
-                window.location.href = window.location.href.replace(
-                    new RegExp(`${this.props.map}$`), `${this.props.map + 1}`);        
-            } catch {
-		alert("End Of Levels. Good Job! Pag");
-            }
+            this.props.onWin?.(this.props.map);
         }, 0);
 
         return true;
@@ -314,9 +304,15 @@ class _Game extends React.Component<GameProps2, GameState> {
 export default function Game(props: GameProps) {
     const {mapId} = useParams();
     console.log(+(mapId||"0"))
-    return (
-<>
+
+    if (mapId === undefined) return <Navigate to="/campaign/0" />
+    if (isNaN(+mapId)) return <Navigate to="/campaign/0" />
+
+    const localData = getLocalData();
+
+    if (localData.reachedCampaignLevel < +mapId) return <Navigate to={`/campaign/${localData.reachedCampaignLevel}`} />
+
+    return (<>
     <_Game {...props} map={+(mapId||"0")}/>
-</>
-)
+</>)
 }
