@@ -22,7 +22,17 @@ export function App() {
                             mapPool={campaignLevels}
                             onWin={(current) => {
                                 setLocalData({...getLocalData(), reachedCampaignLevel: current + 1});
-                                window.location.href = `/campaign/${current + 1}`;
+                            }}
+                            winMessage={{
+                                title: "Completed!",
+                                text: (<>Congratulations! You have completed another level of the campaign.<br />You can continue playing or go back to the main menu.</>),
+                                buttons: [
+                                    {children: "Continue", onClick: () => {
+                                        const localData = getLocalData();
+                                        window.location.href = `/campaign/${localData.reachedCampaignLevel}`;
+                                    }},
+                                    {children: "Main Menu", onClick: () => window.location.href = "/"},
+                                ]
                             }}
                         />
                     } />
@@ -32,8 +42,14 @@ export function App() {
                     <Route path="own/:mapId" element={
                         <Game
                             mapPool={JSON.parse(localStorage.getItem('sukonan-maps')||"[]")}
-                            onWin={(current) => {
-                                alert("You won! :D")
+                            winMessage={{
+                                title: "Completed!",
+                                text: (<>Congratulations! You have your own level.<br/>You can
+                                    select another level or go back to the main menu.</>),
+                                buttons: [
+                                    {children: "Main Menu", onClick: () => window.location.href = "/"},
+                                    {children: "My Maps", onClick: () => window.location.href = "/own"},
+                                ],
                             }}
                         />
                     } />

@@ -6,6 +6,12 @@
   text-align: center;
   cursor: pointer;
   font-weight: bold;
+  transition: all 0.2s ease-in-out;
+
+  &:hover, &:focus {
+    background-color: #a29bfe;
+    color: black;
+  }
 }
 
 .main-menu {
@@ -31,12 +37,9 @@
 
     @include button-outline(#a29bfe);
     margin-block: 1em;
-    transition: all 0.2s ease-in-out;
     width: 75%;
 
     &:hover, &:focus {
-      background-color: #a29bfe;
-      color: black;
       @media (prefers-reduced-motion: no-preference) and (min-width: 450px) {
         letter-spacing: 5px;
         width: 100%

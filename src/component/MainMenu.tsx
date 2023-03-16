@@ -1,5 +1,6 @@
 import '../styles/MainMenu.scss'
 import {Link} from "react-router-dom";
+import {getLocalData} from "../ts/LocalData";
 
 export function MainMenu(props: {
     onPlay?: () => void,
@@ -8,15 +9,15 @@ export function MainMenu(props: {
     onSettings?: () => void,
     onCredits?: () => void,
 }) {
-    const campaignLevel = localStorage.getItem('sukonan-campaign-level');
-    const canContinue = campaignLevel !== null;
+    const campaignLevel = getLocalData()
+    const canContinue = campaignLevel.reachedCampaignLevel > 0;
 
     return (
         <div className="main-menu">
             <div className="main-menu__title">SukOnAn</div>
             <div className="main-menu__buttons">
                 {canContinue &&
-                <Link to={`/campaign/maps/` + campaignLevel} className="main-menu__button">Continue</Link>}
+                <Link to={`/campaign/` + campaignLevel.reachedCampaignLevel} className="main-menu__button">Continue</Link>}
                 <Link to={"/campaign"} tabIndex={1} className="main-menu__button">Start {canContinue?"Over":""}</Link>
                 <Link to={"/own"} tabIndex={2} className="main-menu__button">My Maps</Link>
                 <Link to={"/editor"} tabIndex={3} className="main-menu__button">Editor</Link>

@@ -18,6 +18,7 @@ import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
 import {Navigate, useParams} from 'react-router-dom';
 import {getLocalData, setLocalData} from "../ts/LocalData";
 import {campaignLevels} from "../ts/const";
+import WinAlert from "./WinAlert";
 
 interface GameProps2 extends GameProps {
     map: number
@@ -266,6 +267,7 @@ class _Game extends React.Component<GameProps2, GameState> {
                                     calc(100dvh / ${this.height}),
                                     calc(100dvw / ${this.width})
                                    )`,
+                    overflowX: 'hidden',
                 } as React.CSSProperties
             }>
                 <MapGrid
@@ -296,6 +298,7 @@ class _Game extends React.Component<GameProps2, GameState> {
                 keymap= {this.state.keyMap}
                 onKeyMapChange={(keyMap) => this.setState({ keyMap })}
             />
+                {this.props.winMessage && this.isWin() && <WinAlert {...this.props.winMessage} />}
             </div>
         );
     }
