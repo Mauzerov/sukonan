@@ -14,10 +14,15 @@
   flex-direction: column;
   padding-inline: .5em;
 
+  --size-xsmall: calc(100dvmin / 32);
+  --size-small: calc(100dvmin / 24);
+  --size-medium: calc(100dvmin / 16);
+  --size-large: calc(100dvmin / 8);
+
   &__title {
-    font-size: calc(var(--cell-size) / 1.5);
+    font-size: var(--size-large);
     text-align: center;
-    margin: calc(var(--cell-size) / 8) 0;
+    margin: 0 0 var(--size-xsmall);
     padding: 0;
     font-weight: bold;
   }
@@ -25,20 +30,21 @@
   &__text {
     color: lighten($textColor, 10%);
     text-align: center;
-    padding-inline: calc(var(--cell-size) / 8);
-    font-size: calc(var(--cell-size) / 4);
+    padding-inline: var(--size-small);
+    font-size: var(--size-small);
   }
 
   &__buttons {
-    margin-block: auto calc(var(--cell-size) / 2);
+    margin-block: auto var(--size-xsmall);
     display: flex;
     gap: 1em;
     justify-content: space-around;
 
     button {
       @include button-outline($textColor);
-      padding: calc(var(--cell-size) / 4) calc(var(--cell-size) / 2);
-      font-size: calc(var(--cell-size) / 4);
+      padding: var(--size-xsmall) var(--size-small);
+      font-size: var(--size-medium);
+      transition: width 0s;
     }
   }
 }
