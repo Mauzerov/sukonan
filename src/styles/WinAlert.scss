@@ -44,7 +44,6 @@
       @include button-outline($textColor);
       padding: var(--size-xsmall) var(--size-small);
       font-size: var(--size-medium);
-      transition: width 0s;
     }
   }
 }
