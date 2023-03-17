@@ -27,7 +27,7 @@ export function App() {
                                 title: "Completed!",
                                 text: (<>Congratulations! You have completed another level of the campaign.<br />You can continue playing or go back to the main menu.</>),
                                 buttons: [
-                                    {children: "Continue", onClick: () => {
+                                    {children: "Continue",  onClick: () => {
                                         const localData = getLocalData();
                                         window.location.href = `/campaign/${localData.reachedCampaignLevel}`;
                                     }},
@@ -44,11 +44,11 @@ export function App() {
                             mapPool={JSON.parse(localStorage.getItem('sukonan-maps')||"[]")}
                             winMessage={{
                                 title: "Completed!",
-                                text: (<>Congratulations! You have your own level.<br/>You can
+                                text: (<>Congratulations! You have completed your own level.<br/>You can
                                     select another level or go back to the main menu.</>),
                                 buttons: [
                                     {children: "Main Menu", onClick: () => window.location.href = "/"},
-                                    {children: "My Maps", onClick: () => window.location.href = "/own"},
+                                    {children: "My Maps",   onClick: () => window.location.href = "/own"},
                                 ],
                             }}
                         />
