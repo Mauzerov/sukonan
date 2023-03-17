@@ -14,7 +14,7 @@ export function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Outlet />}>
+                <Route path="/">
                     <Route index element={<MainMenu />} />
                     <Route path="campaign" element={<Navigate to="/campaign/0" replace/>}/>
                     <Route path="campaign/:mapId" element={

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import crate from "../svg/crate.svg";
 import brickWall from "../svg/brick-wall.svg";
 import worker from "../svg/worker.svg";
@@ -287,9 +287,10 @@ class _Game extends React.Component<GameProps2, GameState> {
                                     className="cell" key={3}
                                     style={{backgroundImage: `url(${brickWall})`}}
                                     onClick={() => this.setState({ credits: !this.state.credits })}
-                            ><button style={{backgroundImage: `url(${info})`}} className="btn-reset btn" title="Info"></button>
+                            ><button style={{backgroundImage: `url(${info})`}} className="btn-reset btn" title={this.state.credits ? 'Close' : 'Info'}></button>
                             </div>),
                             0: (<div
+                                title="Main Menu"
                                 className="cell" key={0}
                                 style={{
                                     backgroundImage: `url(${brickWall})`,
@@ -297,6 +298,12 @@ class _Game extends React.Component<GameProps2, GameState> {
                                     fontSize: 'calc(var(--cell-size) * 0.5)',
                                     color: 'white',
                                     paddingInlineStart: '.5em',
+                                    cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                    // Main Menu
+                                    if (window.confirm("Are you sure you want to go back to the main menu?\nCurrent Level progress will be lost."))
+                                        window.location.href = '/';
                                 }}
                             >SukOnAn
                             </div>)
@@ -320,13 +327,14 @@ export default function Game(props: GameProps) {
     console.log(+(mapId||"0"))
 
     if (mapId === undefined) return <Navigate to="/campaign/0" replace/>
-    if (isNaN(+mapId)) return <Navigate to="/campaign/0" replace/>
+    if (isNaN(+mapId))       return <Navigate to="/campaign/0" replace/>
+    if (+mapId < 0)          return <Navigate to="/campaign/0" replace/>
 
     const localData = getLocalData();
 
     if (localData.reachedCampaignLevel < +mapId) return <Navigate to={`/campaign/${localData.reachedCampaignLevel}`} replace/>
 
     return (<>
-    <_Game {...props} map={+(mapId||"0")}/>
-</>)
+        <_Game {...props} map={+(mapId||"0")}/>
+    </>)
 }

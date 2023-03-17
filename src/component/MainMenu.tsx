@@ -18,7 +18,12 @@ export function MainMenu(props: {
             <div className="main-menu__buttons">
                 {canContinue &&
                 <Link to={`/campaign/` + campaignLevel.reachedCampaignLevel} className="main-menu__button">Continue</Link>}
-                <Link to={"/campaign"} tabIndex={1} className="main-menu__button">Start {canContinue?"Over":""}</Link>
+                <Link to={"/campaign"} tabIndex={1} className="main-menu__button" onClick={(e) => {
+                    if (canContinue && !window.confirm("Are you sure you want to start a new game? All progress will be lost.")) {
+                        e.preventDefault(); // prevent navigation
+                    }
+                }
+                }>Start {canContinue?"Over":""}</Link>
                 <Link to={"/own"} tabIndex={2} className="main-menu__button">My Maps</Link>
                 <Link to={"/editor"} tabIndex={3} className="main-menu__button">Editor</Link>
                 <Link to={"/settings"} tabIndex={4} className="main-menu__button">Settings</Link>
