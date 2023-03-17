@@ -288,6 +288,17 @@ class _Game extends React.Component<GameProps2, GameState> {
                                     style={{backgroundImage: `url(${brickWall})`}}
                                     onClick={() => this.setState({ credits: !this.state.credits })}
                             ><button style={{backgroundImage: `url(${info})`}} className="btn-reset btn" title="Info"></button>
+                            </div>),
+                            0: (<div
+                                className="cell" key={0}
+                                style={{
+                                    backgroundImage: `url(${brickWall})`,
+                                    lineHeight: 'calc(var(--cell-size))',
+                                    fontSize: 'calc(var(--cell-size) * 0.5)',
+                                    color: 'white',
+                                    paddingInlineStart: '.5em',
+                                }}
+                            >SukOnAn
                             </div>)
                         }
                     }

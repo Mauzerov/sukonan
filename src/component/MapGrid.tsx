@@ -1,11 +1,9 @@
-import {GameElements, GameState, Position} from "../ts/IGame";
+import {GameElements, Position} from "../ts/IGame";
 import brickWall from "../svg/brick-wall.svg";
-import refresh from "../svg/refresh.svg";
-import info from "../svg/info.svg";
 import worker from "../svg/worker.svg";
 import crate from "../svg/crate.svg";
 import React, {ReactNode} from "react";
-import { ReactComponent as Typhoon} from "../svg/typhoon.svg";
+import {ReactComponent as Typhoon} from "../svg/typhoon.svg";
 
 interface MapGridProps {
     map: string,
@@ -31,7 +29,19 @@ export function MapGrid(props: MapGridProps) {
         }>
             {props.map.split('').map((element, i) => {
                 if (props.custom && props.custom[i]) {
-                    return props.custom[i];
+                    const element = props.custom[i];
+
+                    if (React.isValidElement(element)) {
+                        return React.cloneElement(element, {
+                            ...element.props,
+                            style: {
+                                ...element.props.style,
+                                zIndex: props.gridSize.x * props.gridSize.y - i
+                            }
+                        });
+                    }
+
+                    return element
                 }
 
                 const isPorter = (index: number) => {
@@ -73,7 +83,7 @@ export function MapGrid(props: MapGridProps) {
                     { /* player */ }
                     { (i === pp.x + pp.y * (props.gridSize.x)) && <span style={{
                         backgroundImage: `url(${worker})`,
-                        zIndex: 2
+                        zIndex: 9999
                     }}></span>}
 
                     { /* boxes */ }

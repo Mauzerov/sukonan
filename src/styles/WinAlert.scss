@@ -14,11 +14,6 @@
   flex-direction: column;
   padding-inline: .5em;
 
-  --size-xsmall: calc(100dvmin / 32);
-  --size-small: calc(100dvmin / 24);
-  --size-medium: calc(100dvmin / 16);
-  --size-large: calc(100dvmin / 8);
-
   &__title {
     font-size: var(--size-large);
     text-align: center;

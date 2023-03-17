@@ -8,13 +8,18 @@ nav {
 .cell {
   aspect-ratio: 1/1;
   position: relative;
-  background-size: cover;
+
+  background-size: 100%;
   z-index: 0;
   span {
     background-size: cover;
     position: absolute;
     inset: 0;
-    z-index: 1;
+  }
+
+  &.title {
+    font-size: var(--size-medium);
+    overflow-x: visible;
   }
 }
 
