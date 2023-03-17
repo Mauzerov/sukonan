@@ -308,12 +308,12 @@ export default function Game(props: GameProps) {
     const {mapId} = useParams();
     console.log(+(mapId||"0"))
 
-    if (mapId === undefined) return <Navigate to="/campaign/0" />
-    if (isNaN(+mapId)) return <Navigate to="/campaign/0" />
+    if (mapId === undefined) return <Navigate to="/campaign/0" replace/>
+    if (isNaN(+mapId)) return <Navigate to="/campaign/0" replace/>
 
     const localData = getLocalData();
 
-    if (localData.reachedCampaignLevel < +mapId) return <Navigate to={`/campaign/${localData.reachedCampaignLevel}`} />
+    if (localData.reachedCampaignLevel < +mapId) return <Navigate to={`/campaign/${localData.reachedCampaignLevel}`} replace/>
 
     return (<>
     <_Game {...props} map={+(mapId||"0")}/>
