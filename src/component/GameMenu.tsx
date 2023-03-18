@@ -77,6 +77,11 @@ export function GameMenu(props : {
                     <li>Teleporter Spiral Icon: @game-icons.net</li>
                 </ul>
             </p>
+            <p>Editor Icons
+                <ul>
+                    <li>Import/Export Icon: Mary Akveo</li>
+                </ul>
+            </p>
         </div>
     );
 }
