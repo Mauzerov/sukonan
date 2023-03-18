@@ -1,16 +1,22 @@
-@mixin button-outline($color) {
+@property --gradient-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@mixin button-outline($color, $color2: $color) {
   background-color: transparent;
-  border: 1px solid $color;
   color: $color;
-  //padding: 1em 4em;
   padding-block: .5em;
   text-align: center;
   cursor: pointer;
   font-weight: bold;
   transition: all 0.2s ease-in-out;
+  border: 1px solid $color;
+  position: relative;
 
   &:hover, &:focus {
-    background-color: #a29bfe;
+    background: $color;
     color: black;
   }
 }
@@ -28,7 +34,7 @@
   }
 
   &__button {
-    @include button-outline(#a29bfe);
+    @include button-outline(#a29bfe, #6c5ce7);
     font-size: max(2em, 2dvh);
     margin-block: .3em;
     width: 100%;
@@ -73,7 +79,6 @@
              (min-width: 450px)                      and
              (orientation: portrait) {
         letter-spacing: 5px;
-        width: 120%;
       }
     }
   }

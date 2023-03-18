@@ -3,6 +3,7 @@
   --size-small: calc(100dvmin / 24);
   --size-medium: calc(100dvmin / 16);
   --size-large: calc(100dvmin / 8);
+  --body-bg: #2c3e50;
 }
 
 *, *::after, *::before {
@@ -20,8 +21,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #2c3e50;
-  background: linear-gradient(to right, #2c3e50, #34495e);
+  background: var(--body-bg);
+  background: linear-gradient(to right, var(--body-bg), #34495e);
   touch-action: manipulation;
 }
 
