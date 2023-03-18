@@ -3,6 +3,8 @@ import {MapGrid} from "./MapGrid";
 import Teleporter from "../ts/Teleporter";
 import {Position} from "../ts/IGame";
 import brickWall from "../svg/brick-wall.svg";
+import { ReactComponent as Export} from "../svg/export.svg";
+import { ReactComponent as Import} from "../svg/import.svg";
 import info from "../svg/info.svg";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
 
@@ -170,15 +172,47 @@ export class Editor extends React.Component<{}, {
                              [this.state.size.x * this.state.size.y - 1]: (<div
                                     className="cell flex-row" key={this.state.size.x * this.state.size.y - 1}
                                     style={{backgroundImage: `url(${brickWall})`,}}>
-                                    <button
-                                        className="btn-reset btn-size"
-                                        title="Import"
-                                        onClick={() => this.importMap()}>Import</button>
+                                <button
+                                    className="btn-reset btn-size"
+                                    title="Import"
+                                    style={{
+                                        backgroundSize: "cover",
+                                    }}
+                                    onClick={() => this.importMap()}><Import style={{
+                                        fill: "white",
+                                        width: "calc(var(--cell-size) / 2.5)",
+                                        // strokeWidth: "2em"
+                                    }}/></button>
                                  <button
                                      className="btn-reset btn-size"
                                      title="Export"
-                                     onClick={() => this.exportMap()}>Export</button>
+                                     style={{
+                                         backgroundSize: "cover",
+                                     }}
+                                     onClick={() => this.exportMap()}><Export style={{
+                                        fill: "white",
+                                        width: "calc(var(--cell-size) / 2.5)",
+                                        // strokeWidth: "2em"
+                                     }}/></button>
                                 </div>),
+                             0: (<div
+                                 title="Main Menu"
+                                 className="cell" key={0}
+                                 style={{
+                                     backgroundImage: `url(${brickWall})`,
+                                     lineHeight: 'calc(var(--cell-size))',
+                                     fontSize: 'calc(var(--cell-size) * 0.5)',
+                                     color: 'white',
+                                     paddingInlineStart: '.5em',
+                                     cursor: 'pointer',
+                                 }}
+                                 onClick={() => {
+                                     // Main Menu
+                                     if (window.confirm("Are you sure you want to go back to the main menu?\nCurrent Level progress will be lost."))
+                                         window.location.href = '/';
+                                 }}
+                             >SukOnAn
+                             </div>)
                          }
                      }
             />
