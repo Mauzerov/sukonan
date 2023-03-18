@@ -7,6 +7,13 @@ export default interface Teleporter {
 };
 
 export const PorterColors = [
-    "orange",
-    "blue",
+    "#f39c12",
+    "#2980b9",
+    "#c0392b",
+    "#e056fd",
+    "#2ecc71",
+    "#f1c40f",
+    "#8e44ad",
+    "#f8c291",
+    "#000000",
 ];
