@@ -5,14 +5,14 @@ import Game from "./component/Game";
 import {GameMenu} from "./component/GameMenu";
 import {defaultKeyMap} from "./ts/KeyMap";
 import {MapPicker} from "./component/MapPicker";
-import {BrowserRouter, Outlet, Route, Routes, Navigate, useNavigate} from "react-router-dom";
+import {HashRouter, Outlet, Route, Routes, Navigate, useNavigate} from "react-router-dom";
 import {campaignLevels} from "./ts/const";
 import {getLocalData, setLocalData} from "./ts/LocalData";
 
 export function App() {
     const [keyMap, setKeyMap] = useState(defaultKeyMap);
     return (
-        <BrowserRouter>
+        <HashRouter>
             <Routes>
                 <Route path="/">
                     <Route index element={<MainMenu />} />
@@ -58,6 +58,6 @@ export function App() {
                     <Route path="*" element={<div>404</div>} />
                 </Route>
             </Routes>
-        </BrowserRouter>
+        </HashRouter>
     )
 }
