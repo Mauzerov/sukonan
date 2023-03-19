@@ -11,8 +11,11 @@ import {getLocalData, setLocalData} from "./ts/LocalData";
 
 export function App() {
     const [keyMap, setKeyMap] = useState(defaultKeyMap);
+
+    const navigate = useNavigate();
+
     return (
-        <HashRouter>
+        <>
             <Routes>
                 <Route path="/">
                     <Route index element={<MainMenu />} />
@@ -29,15 +32,15 @@ export function App() {
                                 buttons: [
                                     {children: "Continue",  onClick: () => {
                                         const localData = getLocalData();
-                                        window.location.href = `/campaign/${localData.reachedCampaignLevel}`;
+                                        navigate(`/campaign/${localData.reachedCampaignLevel}`);
                                     }},
-                                    {children: "Main Menu", onClick: () => window.location.href = "/"},
+                                    {children: "Main Menu", onClick: () => navigate("/")},
                                 ]
                             }}
                         />
                     } />
                     <Route path="own" element={<MapPicker onMapSelect={map => {
-                        window.location.href = `/own/${map}`;
+                        navigate(`/own/${map}`)
                     }}/>} />
                     <Route path="own/:mapId" element={
                         <Game
@@ -47,8 +50,8 @@ export function App() {
                                 text: (<>Congratulations! You have completed your own level.<br/>You can
                                     select another level or go back to the main menu.</>),
                                 buttons: [
-                                    {children: "Main Menu", onClick: () => window.location.href = "/"},
-                                    {children: "My Maps",   onClick: () => window.location.href = "/own"},
+                                    {children: "Main Menu", onClick: () => navigate("/")},
+                                    {children: "My Maps",   onClick: () => navigate("/own")},
                                 ],
                             }}
                         />
@@ -58,6 +61,6 @@ export function App() {
                     <Route path="*" element={<div>404</div>} />
                 </Route>
             </Routes>
-        </HashRouter>
+        </>
     )
 }

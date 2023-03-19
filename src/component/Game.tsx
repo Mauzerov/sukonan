@@ -15,13 +15,14 @@ import {overlap} from "../util/Util";
 import {Editor} from "./Editor";
 import {MapGrid} from "./MapGrid";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
-import {Navigate, useParams} from 'react-router-dom';
+import {Navigate, NavigateFunction, useNavigate, useParams} from 'react-router-dom';
 import {getLocalData, setLocalData} from "../ts/LocalData";
 import {campaignLevels} from "../ts/const";
 import WinAlert from "./WinAlert";
 
 interface GameProps2 extends GameProps {
-    map: number
+    map: number,
+    navigate: NavigateFunction,
 }
 
 class _Game extends React.Component<GameProps2, GameState> {
@@ -303,7 +304,7 @@ class _Game extends React.Component<GameProps2, GameState> {
                                 onClick={() => {
                                     // Main Menu
                                     if (window.confirm("Are you sure you want to go back to the main menu?\nCurrent Level progress will be lost."))
-                                        window.location.href = '/';
+                                        this.props.navigate('/');
                                 }}
                             >SukOnAn
                             </div>)
@@ -324,6 +325,7 @@ class _Game extends React.Component<GameProps2, GameState> {
 
 export default function Game(props: GameProps) {
     const {mapId} = useParams();
+    const navigate = useNavigate();
     console.log(+(mapId||"0"))
 
     if (mapId === undefined) return <Navigate to="/campaign/0" replace/>
@@ -335,6 +337,6 @@ export default function Game(props: GameProps) {
     if (localData.reachedCampaignLevel < +mapId) return <Navigate to={`/campaign/${localData.reachedCampaignLevel}`} replace/>
 
     return (<>
-        <_Game {...props} map={+(mapId||"0")}/>
+        <_Game navigate={navigate} {...props} map={+(mapId||"0")} />
     </>)
 }

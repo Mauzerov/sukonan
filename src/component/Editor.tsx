@@ -7,24 +7,25 @@ import { ReactComponent as Export} from "../svg/export.svg";
 import { ReactComponent as Import} from "../svg/import.svg";
 import info from "../svg/info.svg";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
+import {NavigateFunction, useNavigate} from "react-router-dom";
 
-export class Editor extends React.Component<{}, {
+class EditorPage extends React.Component<{navigate: NavigateFunction}, {
     map: string[],
     size: Position,
     loading: boolean,
 }> {
     static readonly minSize = 5;
     static readonly elements = " WBTS123456789"
-    static readonly _defaultMap = "W".repeat(Editor.minSize) + "W   W".repeat(Editor.minSize - 2) +  "W".repeat(Editor.minSize)
-    static readonly defaultSize = {x: Editor.minSize, y: Editor.minSize}
-    static readonly defaultMap : string[] = Editor._defaultMap.match(new RegExp(`.{1,${Editor.minSize}}`, 'g'))!
+    static readonly _defaultMap = "W".repeat(EditorPage.minSize) + "W   W".repeat(EditorPage.minSize - 2) +  "W".repeat(EditorPage.minSize)
+    static readonly defaultSize = {x: EditorPage.minSize, y: EditorPage.minSize}
+    static readonly defaultMap : string[] = EditorPage._defaultMap.match(new RegExp(`.{1,${EditorPage.minSize}}`, 'g'))!
 
-    constructor(props: {}) {
+    constructor(props: {navigate: NavigateFunction}) {
         super(props);
-        console.log(Editor.defaultMap);
-        console.log(Editor._defaultMap);
-        console.log(new RegExp(`.{1,${Editor.minSize}}`, 'g'))
-        this.state = { map: Editor.defaultMap, size: {x: Editor.minSize, y: Editor.minSize }, loading: false};
+        console.log(EditorPage.defaultMap);
+        console.log(EditorPage._defaultMap);
+        console.log(new RegExp(`.{1,${EditorPage.minSize}}`, 'g'))
+        this.state = { map: EditorPage.defaultMap, size: {x: EditorPage.minSize, y: EditorPage.minSize }, loading: false};
     }
 
     private importMap = () => {
@@ -51,8 +52,8 @@ export class Editor extends React.Component<{}, {
     }
 
     private nextElement = (element: string, delta: number) => {
-        const index = Editor.elements.indexOf(element);
-        return Editor.elements[(index + delta + Editor.elements.length) % Editor.elements.length];
+        const index = EditorPage.elements.indexOf(element);
+        return EditorPage.elements[(index + delta + EditorPage.elements.length) % EditorPage.elements.length];
     }
 
 
@@ -97,7 +98,7 @@ export class Editor extends React.Component<{}, {
     }
 
     reduceMap = (deltaX: number, deltaY: number) => {
-        if (this.state.size.x - deltaX < Editor.minSize || this.state.size.y - deltaY < Editor.minSize) return;
+        if (this.state.size.x - deltaX < EditorPage.minSize || this.state.size.y - deltaY < EditorPage.minSize) return;
 
         if (deltaY) {
             for (let i = 0; i < deltaY; i++) {
@@ -209,7 +210,7 @@ export class Editor extends React.Component<{}, {
                                  onClick={() => {
                                      // Main Menu
                                      if (window.confirm("Are you sure you want to go back to the main menu?\nCurrent Level progress will be lost."))
-                                         window.location.href = '/';
+                                         this.props.navigate('/');
                                  }}
                              >SukOnAn
                              </div>)
@@ -219,4 +220,8 @@ export class Editor extends React.Component<{}, {
             </div>
         );
     }
+}
+
+export function Editor() {
+    return <EditorPage navigate={useNavigate()}/>
 }

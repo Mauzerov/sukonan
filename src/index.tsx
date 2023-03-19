@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import {BrowserRouter, Routes, Route, HashRouter} from "react-router-dom";
 import './styles/index.css';
 import Game from './component/Game';
 import reportWebVitals from './reportWebVitals';
@@ -16,7 +16,9 @@ root.render(
 <>
   <React.StrictMode>
       {/*<MapPicker />*/}
-      <App />
+      <HashRouter>
+        <App />
+      </HashRouter>
   </React.StrictMode>
 </>
 );
