@@ -56,7 +56,10 @@ export function App() {
                     />
                 } />
                 <Route path="/editor" element={<Editor />} />
-                <Route path="/settings" element={<GameMenu keymap={keyMap} visible={true} onKeyMapChange={(k) => setKeyMap({...k})}/>} />
+                <Route path="/settings" element={<GameMenu
+                    keymap={keyMap}
+                    visible={true}
+                    onKeyMapChange={(k) => setKeyMap({...k})}/>} />
                 <Route path="/*" element={<div>404</div>} />
             </Routes>
         </>
