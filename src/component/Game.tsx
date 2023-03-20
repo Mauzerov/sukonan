@@ -102,6 +102,12 @@ class _Game extends React.Component<GameProps2, GameState> {
         this.isMount = true;
     }
 
+    componentDidUpdate(prevProps: Readonly<GameProps2>, prevState: Readonly<GameState>, snapshot?: any) {
+        if (this.props.map !== prevProps.map) {
+            this.configureMap((this.props.mapPool || _Game.campaign)[this.props.map]);
+        }
+    }
+
     private isWin() : boolean {
         // Every Target Is Covered By Box
         return this.state.targets.every(
