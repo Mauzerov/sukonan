@@ -31,7 +31,7 @@ export function App() {
                             buttons: [
                                 {children: "Continue",  onClick: () => {
                                     const localData = getLocalData();
-                                    navigate(`/campaign/${localData.reachedCampaignLevel}`, {replace: true});
+                                    navigate(`/campaign/${localData.reachedCampaignLevel}`);
                                 }},
                                 {children: "Main Menu", onClick: () => { navigate("/"); }},
                             ]
