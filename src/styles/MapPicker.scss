@@ -1,0 +1,21 @@
+@use 'MainMenu' as *;
+
+.map-picker {
+  grid-template-columns: repeat(min(5, var(--own-map-count)), auto);
+
+  @media screen and (max-width: 700px) {
+    grid-template-columns: repeat(min(3, var(--own-map-count)), auto);
+  }
+
+  @media screen and (max-width: 400px) {
+    grid-template-columns: repeat(min(2, var(--own-map-count)), auto);
+  }
+
+  &__no-maps .button {
+    @include button-outline(#a29bfe, #6c5ce7);
+
+    padding-inline: 1em;
+    text-decoration: none;
+    margin-inline-start: 1em;
+  }
+}
