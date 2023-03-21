@@ -1,5 +1,6 @@
 import KeyMap from "../ts/KeyMap";
 import {useEffect, useState} from "react";
+import "../styles/Settings.scss";
 
 function Control(props: { keyCode: string, onChange: (key: string) => void }) {
     const [listening, setListening] = useState(false);
@@ -20,7 +21,7 @@ function Control(props: { keyCode: string, onChange: (key: string) => void }) {
     return (
         <div className="key-change">
             <span className="key">{props.keyCode}</span>
-            <button onClick={() => setListening(!listening)}>{listening ? "Listening..." : "Change"}</button>
+            <button onClick={() => setListening(!listening)}>{listening ? "[...]" : "Change"}</button>
         </div>
     );
 }
@@ -78,6 +79,23 @@ export default function Settings(props: {
                             }
                         }/>
                     ))}
+
+                <span className="key">Pause:&nbsp;</span>
+                <Control keyCode={props.keymap.menu} onChange={
+                    (key) => {
+                        props.keymap.menu = key;
+                        props.onKeyMapChange?.(props.keymap);
+                        console.log(props.keymap)
+                    }
+                }/><div></div>
+                <span className="key">Restart:&nbsp;</span>
+                <Control keyCode={props.keymap.restart} onChange={
+                    (key) => {
+                        props.keymap.restart = key;
+                        props.onKeyMapChange?.(props.keymap);
+                        console.log(props.keymap)
+                    }
+                }/><div></div>
             </div>
         </div>
     )

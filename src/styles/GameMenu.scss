@@ -6,67 +6,10 @@
   margin: auto;
   z-index: 10000;
   background: rgb(0 0 0 / .9);
-  width: fit-content;
   color: azure;
   max-height: 100dvh;
   overflow-y: auto;
   p, h1 {
     color: azure;
-  }
-
-  .controls {
-    display: flex;
-    flex-direction: column;
-
-
-    .title {
-      font-size: var(--size-medium);
-      text-align: center;
-      font-weight: bold;
-      margin-block: 0 .5ch;
-    }
-
-    .control-category {
-      display: grid;
-      grid-template-columns: 2fr repeat(2, 3fr);
-      //font-size: var(--size-xsmall);
-
-      @media screen and (max-width: 450px){
-        grid-template-columns: 1fr;
-        margin: auto;
-
-        .control-category-title {
-          display: none;
-        }
-
-        .key-change {
-          margin-left: var(--size-small);
-        }
-      }
-
-      width: fit-content;
-      column-gap: 1em;
-
-      .control-category-title {
-        text-align: center;
-        font-weight: bold;
-        font-size: var(--size-xsmall);
-      }
-
-      .key-change {
-        display: flex;
-        &, & * {
-          //font-size: var(--size-xsmall);
-        }
-
-        & :last-child {
-          margin-inline-start: auto;
-        }
-
-        & :first-child {
-          margin-inline-end: 1em;
-        }
-      }
-    }
   }
 }

@@ -8,6 +8,8 @@ import {MapPicker} from "./component/MapPicker";
 import {HashRouter, Outlet, Route, Routes, Navigate, useNavigate} from "react-router-dom";
 import {campaignLevels} from "./ts/const";
 import {getLocalData, setLocalData} from "./ts/LocalData";
+import Settings from "./component/Settings";
+import Credits from "./component/Credits";
 
 export function App() {
     const [keyMap, setKeyMap] = useState(defaultKeyMap);
@@ -56,10 +58,10 @@ export function App() {
                     />
                 } />
                 <Route path="/editor" element={<Editor />} />
-                <Route path="/settings" element={<GameMenu
+                <Route path="/settings" element={<Settings
                     keymap={keyMap}
-                    visible={true}
                     onKeyMapChange={(k) => setKeyMap({...k})}/>} />
+                <Route path="/credits" element={<Credits/>} />
                 <Route path="/*" element={<div>404</div>} />
             </Routes>
         </>

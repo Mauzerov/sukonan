@@ -1,0 +1,66 @@
+@use 'MainMenu' as *;
+
+.controls {
+  margin: auto;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+
+  &, & * {
+    color: azure;
+  }
+
+  button {
+    @include button-outline(#a29bfe, #6c5ce7);
+    width: 9ch;
+  }
+
+  .title {
+    font-size: var(--size-medium);
+    text-align: center;
+    font-weight: bold;
+    margin-block: 0 .5ch;
+  }
+
+  .control-category {
+    display: grid;
+    grid-template-columns: 2fr repeat(2, 3fr);
+
+    @media screen and (max-width: 450px){
+      grid-template-columns: 1fr;
+      margin: auto;
+
+      .control-category-title {
+        display: none;
+      }
+
+      .key-change {
+        margin-left: var(--size-small);
+      }
+    }
+
+    width: fit-content;
+    column-gap: 1em;
+
+    .control-category-title {
+      text-align: center;
+      font-weight: bold;
+      font-size: var(--size-xsmall);
+    }
+
+    .key-change {
+      display: flex;
+      &, & * {
+        //font-size: var(--size-xsmall);
+      }
+
+      & :last-child {
+        margin-inline-start: auto;
+      }
+
+      & :first-child {
+        margin-inline-end: 1em;
+      }
+    }
+  }
+}
