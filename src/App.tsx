@@ -65,8 +65,8 @@ export function App() {
                         }}
                     />
                 } />
-                <Route path="/editor" element={
-                    <Editor key={new Date().getTime().toString()}/>
+                <Route key={new Date().getTime().toString()} path="/editor" element={
+                    <Editor key={new Date().getTime().toString() + ".'"}/>
                 }/>
                 <Route path="/settings" element={<Settings
                     keymap={keyMap}
