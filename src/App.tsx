@@ -13,6 +13,7 @@ import Credits from "./component/Credits";
 
 export function App() {
     const [keyMap, setKeyMap] = useState(getKeyMap);
+    const localData = getLocalData();
 
     const navigate = useNavigate();
 
@@ -39,6 +40,11 @@ export function App() {
                                 {children: "Main Menu", onClick: () => { navigate("/"); }},
                             ]
                         }}
+                        conditions={[
+                            {func: (mapId) => {
+                                return localData.reachedCampaignLevel < mapId
+                            }, element: (<Navigate to={`/campaign/${localData.reachedCampaignLevel}`} replace/>)}
+                        ]}
                     />
                 } />
                 <Route path="/own" element={<MapPicker onMapSelect={map => {

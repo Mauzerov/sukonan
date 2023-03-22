@@ -13,7 +13,8 @@ export interface GameProps {
     map?: number,
     mapPool?: string[][],
     keymap: KeyMap,
-    winMessage?: WinAlertProps
+    winMessage?: WinAlertProps,
+    conditions?: {func: (mapId: number) => boolean, element: ReactNode}[]
 }
 
 export interface GameElements {

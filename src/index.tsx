@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import {BrowserRouter, Routes, Route, HashRouter} from "react-router-dom";
 import './styles/index.css';
-import Game from './component/Game';
 import reportWebVitals from './reportWebVitals';
 import {Editor} from "./component/Editor";
 import {App} from "./App";

@@ -34,7 +34,7 @@ export function MapPicker(
                     }
                     const mapString = map.join('');
                     return (
-                        <div style={{
+                        <div key={i} style={{
                             "--cell-size": `auto`,
                         } as React.CSSProperties}
                         onClick={() => {props.onMapSelect?.(i)}}
