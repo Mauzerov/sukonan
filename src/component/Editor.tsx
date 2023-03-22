@@ -25,7 +25,9 @@ class EditorPage extends React.Component<{navigate: NavigateFunction}, {
         console.log(EditorPage.defaultMap);
         console.log(EditorPage._defaultMap);
         console.log(new RegExp(`.{1,${EditorPage.minSize}}`, 'g'))
+        console.warn(this.state)
         this.state = { map: EditorPage.defaultMap, size: {x: EditorPage.minSize, y: EditorPage.minSize }, loading: false};
+        console.warn(this.state)
     }
 
     private importMap = () => {
@@ -49,6 +51,18 @@ class EditorPage extends React.Component<{navigate: NavigateFunction}, {
         localStorage.setItem("sukonan-maps", JSON.stringify([...maps, map]));
 
         return JSON.stringify(map);
+    }
+
+    componentDidUpdate(prevProps: Readonly<{navigate: NavigateFunction}>, prevState: Readonly<{
+        map: string[],
+        size: Position,
+        loading: boolean,
+    }>, snapshot?: any) {
+        console.warn(this.state, prevState)
+        // if (this.state.map.join() !== prevState.map.join()) {
+            // console.warn("hot reload")
+            // this.setState({ map: EditorPage.defaultMap, size: {x: EditorPage.minSize, y: EditorPage.minSize }, loading: false});
+        // }
     }
 
     private nextElement = (element: string, delta: number) => {
@@ -77,6 +91,7 @@ class EditorPage extends React.Component<{navigate: NavigateFunction}, {
     }
 
     extendMap = (deltaX: number, deltaY: number) => {
+        console.warn(this.state)
         if (deltaY) {
             for (let i = 0; i < deltaY; i++) {
                 this.state.map[this.state.map.length - 1] = "W" + " ".repeat(this.state.size.x - 2) + "W";

@@ -36,8 +36,9 @@ export function MapPicker(
                     return (
                         <div key={i} style={{
                             "--cell-size": `auto`,
+                            position: 'relative',
                         } as React.CSSProperties}
-                        onClick={() => {props.onMapSelect?.(i)}}
+                        className="map-picker-map"
                         >
                             <MapGrid
                                 key={i}
@@ -51,6 +52,14 @@ export function MapPicker(
                                     ...filterBoxesAndTargets(mapString, gridSize)
                                 }}
                                 gridSize={gridSize}/>
+                            <div className="map-picker-map-buttons">
+                                <button onClick={() => {props.onMapSelect?.(i)}}>
+                                    Play 
+                                </button>
+                                <button>
+                                    Edit 
+                                </button>
+                            </div>
                         </div>)
                 })}
             </div>}

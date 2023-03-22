@@ -19,7 +19,7 @@ export function MapGrid(props: MapGridProps) {
     const pp = props.gameElements.player;
     console.log(props);
     return (
-        <div style={
+        <div className="map-grid" style={
             {
                 display: 'grid',
                 gridTemplate: `repeat(${props.gridSize.y}, var(--cell-size)) / repeat(${props.gridSize.x}, auto)`,

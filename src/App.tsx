@@ -65,7 +65,9 @@ export function App() {
                         }}
                     />
                 } />
-                <Route path="/editor" element={<Editor />} />
+                <Route path="/editor" element={
+                    <Editor key={new Date().getTime().toString()}/>
+                }/>
                 <Route path="/settings" element={<Settings
                     keymap={keyMap}
                     onKeyMapChange={(k) => { setKeyMap({...k}); saveKeyMap({...k}); }}/>} />

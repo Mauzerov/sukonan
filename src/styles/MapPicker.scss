@@ -19,4 +19,26 @@
     text-decoration: none;
     margin-inline-start: 1em;
   }
+
+  &-map &-map-buttons {
+    display: none;
+    position: absolute;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 5%;
+    inset: 0;
+    z-index: 9999999;
+    background: rgb(0 0 0 / .5);
+
+    button {
+      @include button-outline(#a29bfe, #6c5ce7);
+      padding-block: min(5%, 4em);
+      width: 40%;
+    }
+  }
+
+  &-map:is(:hover, :focus) &-map-buttons {
+    display: flex;
+  }
 }
