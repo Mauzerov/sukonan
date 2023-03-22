@@ -5,7 +5,7 @@
 }
 
 @mixin button-outline($color, $color2: $color) {
-  background-color: transparent;
+  background-color: transparent;//#233140;
   color: $color;
   padding-block: .5em;
   text-align: center;
@@ -13,6 +13,7 @@
   font-weight: bold;
   transition: all 0.2s ease-in-out;
   border: 1px solid $color;
+  // border-radius: 10px;
   position: relative;
 
   &:hover, &:focus {

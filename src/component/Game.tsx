@@ -9,7 +9,7 @@ import { Position, GameState, GameProps } from '../ts/IGame';
 import Direction, { opposite } from '../ts/Direction';
 import '../styles/Game.scss';
 import {GameMenu} from "./GameMenu";
-import KeyMap, {defaultKeyMap} from "../ts/KeyMap";
+import KeyMap, {defaultKeyMap, saveKeyMap, getKeyMap} from "../ts/KeyMap";
 import Teleporter, {PorterColors} from "../ts/Teleporter";
 import {overlap} from "../util/Util";
 import {Editor} from "./Editor";
@@ -22,7 +22,7 @@ import WinAlert from "./WinAlert";
 
 interface GameProps2 extends GameProps {
     map: number,
-    navigate: NavigateFunction,
+    navigate: NavigateFunction
 }
 
 class _Game extends React.Component<GameProps2, GameState> {
@@ -46,7 +46,7 @@ class _Game extends React.Component<GameProps2, GameState> {
     }
     private configureMap(mapToParse: string[]) {
         console.log("m", mapToParse)
-        this.height = mapToParse.length + 2;
+        this.height = mapToParse.length + 2;    
         console.assert(this.height, "Height can only be non negative integer");
         this.width = mapToParse[0].length + 2;
         console.assert(mapToParse.every(it => it.length === this.width - 2), "Each row has to be same size" + mapToParse);       
@@ -72,7 +72,7 @@ class _Game extends React.Component<GameProps2, GameState> {
 
         if (this.isMount) {
             this.setState(newState);
-        } else this.state = { ...newState, keyMap: defaultKeyMap};
+        } else this.state = { ...newState, keyMap: this.props.keymap};
     }
     private init = (maps?: string[][]) => {
         console.log("constructor");
@@ -321,7 +321,7 @@ class _Game extends React.Component<GameProps2, GameState> {
             <GameMenu
                 visible={this.state.credits}
                 keymap= {this.state.keyMap}
-                onKeyMapChange={(keyMap) => this.setState({ keyMap })}
+                onKeyMapChange={(keyMap) => {this.setState({ keyMap }); saveKeyMap({...keyMap}); } }
             />
                 {this.props.winMessage && this.isWin() && <WinAlert {...this.props.winMessage} />}
             </div>

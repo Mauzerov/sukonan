@@ -15,3 +15,15 @@ export const defaultKeyMap: KeyMap = {
     restart: 'KeyR',
     menu: 'Escape',
 }
+
+export function getKeyMap(): KeyMap {
+    const localKeymap = localStorage.getItem("keymap");
+    if (localKeymap) {
+        return {...defaultKeyMap, ...JSON.parse(localKeymap)}
+    }
+    return defaultKeyMap;
+}
+
+export function saveKeyMap(keyMap: KeyMap) {
+    localStorage.setItem("keymap", JSON.stringify(keyMap));
+}

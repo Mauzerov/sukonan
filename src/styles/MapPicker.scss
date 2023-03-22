@@ -1,6 +1,7 @@
 @use 'MainMenu' as *;
 
 .map-picker {
+  width: 100dvmin;
   grid-template-columns: repeat(min(5, var(--own-map-count)), auto);
 
   @media screen and (max-width: 700px) {

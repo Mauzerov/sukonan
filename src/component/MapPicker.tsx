@@ -22,7 +22,7 @@ export function MapPicker(
                 className={"map-picker"}
                 style={{
                 display: 'grid',
-                width: "100%",
+                // width: "100%",
                 gap: "1rem",
                 "--own-map-count": maps.length,
                 // aspectRatio: "1 / 1",

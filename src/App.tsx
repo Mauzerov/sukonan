@@ -3,7 +3,7 @@ import {MainMenu} from "./component/MainMenu";
 import {Editor} from "./component/Editor";
 import Game from "./component/Game";
 import {GameMenu} from "./component/GameMenu";
-import {defaultKeyMap} from "./ts/KeyMap";
+import {defaultKeyMap, saveKeyMap, getKeyMap} from "./ts/KeyMap";
 import {MapPicker} from "./component/MapPicker";
 import {HashRouter, Outlet, Route, Routes, Navigate, useNavigate} from "react-router-dom";
 import {campaignLevels} from "./ts/const";
@@ -12,7 +12,7 @@ import Settings from "./component/Settings";
 import Credits from "./component/Credits";
 
 export function App() {
-    const [keyMap, setKeyMap] = useState(defaultKeyMap);
+    const [keyMap, setKeyMap] = useState(getKeyMap);
 
     const navigate = useNavigate();
 
@@ -23,6 +23,7 @@ export function App() {
                 <Route path="/campaign" element={<Navigate to="/campaign/0" replace/>}/>
                 <Route path="/campaign/:mapId" element={
                     <Game
+                        keymap={keyMap}
                         mapPool={campaignLevels}
                         onWin={(current) => {
                             setLocalData({...getLocalData(), reachedCampaignLevel: current + 1});
@@ -45,6 +46,7 @@ export function App() {
                 }}/>} />
                 <Route path="/own/:mapId" element={
                     <Game
+                        keymap={keyMap}
                         mapPool={JSON.parse(localStorage.getItem('sukonan-maps')||"[]")}
                         winMessage={{
                             title: "Completed!",
@@ -60,7 +62,7 @@ export function App() {
                 <Route path="/editor" element={<Editor />} />
                 <Route path="/settings" element={<Settings
                     keymap={keyMap}
-                    onKeyMapChange={(k) => setKeyMap({...k})}/>} />
+                    onKeyMapChange={(k) => { setKeyMap({...k}); saveKeyMap({...k}); }}/>} />
                 <Route path="/credits" element={<Credits/>} />
                 <Route path="/*" element={<div>404</div>} />
             </Routes>

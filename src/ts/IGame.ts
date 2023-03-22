@@ -12,7 +12,7 @@ export interface GameProps {
     onWin?: (mapId: number) => void,
     map?: number,
     mapPool?: string[][],
-
+    keymap: KeyMap,
     winMessage?: WinAlertProps
 }
 

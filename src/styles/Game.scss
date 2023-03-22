@@ -29,12 +29,10 @@ nav {
   border: none;
   background: transparent;
   background-size: contain;
-  height: 100%;
   width: 100%;
   cursor: pointer;
   padding: 0;
   margin: 0;
-  display: inherit;
 }
 
 .btn {
@@ -44,9 +42,13 @@ nav {
 }
 
 .btn-size {
-  font-size: 4em;
+  font-size: calc(var(--cell-size) / 2);
+  text-align: center;
   flex: 1;
-  display: block;
+  max-width: 50%;;
+  flex-grow: 1;
+  margin: 5px;
+  // display: block;
   color: white;
 }
 
@@ -55,6 +57,7 @@ nav {
 }
 .flex-row {
   flex-direction: row;
+  align-items: center;
 }
 
 .orange {
