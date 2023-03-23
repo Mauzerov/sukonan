@@ -3,13 +3,13 @@ import {MapGrid} from "./MapGrid";
 import Teleporter from "../ts/Teleporter";
 import {Position} from "../ts/IGame";
 import brickWall from "../svg/brick-wall.svg";
-import { ReactComponent as Export} from "../svg/export.svg";
-import { ReactComponent as Import} from "../svg/import.svg";
+import { ReactComponent as Export} from "../svg/save.svg";
 import info from "../svg/info.svg";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
-import {NavigateFunction, useNavigate} from "react-router-dom";
+import {NavigateFunction, useNavigate, useParams} from "react-router-dom";
+import {getLocalData, setLocalData} from "../ts/LocalData";
 
-class EditorPage extends React.Component<{navigate: NavigateFunction}, {
+class EditorPage extends React.Component<{navigate: NavigateFunction, ownMapIndex?:number}, {
     map: string[],
     size: Position,
     loading: boolean,
@@ -21,18 +21,24 @@ class EditorPage extends React.Component<{navigate: NavigateFunction}, {
     static readonly defaultSize = {x: EditorPage.minSize, y: EditorPage.minSize}
     static readonly defaultMap : string[] = EditorPage._defaultMap.match(new RegExp(`.{1,${EditorPage.minSize}}`, 'g'))!
 
-    constructor(props: {navigate: NavigateFunction}) {
+    constructor(props: {navigate: NavigateFunction, ownMapIndex?:number}) {
         super(props);
-        this.state = { map: [...EditorPage.defaultMap], size: {x: EditorPage.minSize, y: EditorPage.minSize }, loading: true};
-    }
+        const localData = getLocalData()
+        console.log(props.ownMapIndex)
 
-    private importMap = () => {
-        const mapString = prompt("Import map");
-        if (!mapString) return;
+        const selectedMap = localData.personalMaps[props.ownMapIndex ?? -1];
 
-        const map = JSON.parse(mapString);
+        const map = (selectedMap === undefined) ? EditorPage.defaultMap : [
+                        "W".repeat(selectedMap[0].length + 2),
+                        ...selectedMap.map(it => `W${it}W`),
+                        "W".repeat(selectedMap[0].length + 2)
+                    ]
 
-        this.setState({map: map, size: {x: map[0].length, y: map.length}})
+        this.state = {
+            map,
+            size: {x: map[0].length, y: map.length},
+            loading: true
+        };
     }
 
     private exportMap = () => {
@@ -44,7 +50,13 @@ class EditorPage extends React.Component<{navigate: NavigateFunction}, {
 
         alert("Map saved! You can now access it in the game menu.");
 
-        localStorage.setItem("sukonan-maps", JSON.stringify([...maps, map]));
+        const localData = getLocalData();
+
+        if (this.props.ownMapIndex === undefined)
+            localData.personalMaps = [...localData.personalMaps, map];
+        else localData.personalMaps[this.props.ownMapIndex] = map;
+
+        setLocalData(localData);
 
         return JSON.stringify(map);
     }
@@ -121,6 +133,7 @@ class EditorPage extends React.Component<{navigate: NavigateFunction}, {
             x: playerPosition % this.state.size.x,
             y: ~~(playerPosition / this.state.size.x)
         }
+        console.log(this.state)
 
         return (
             <div style={
@@ -168,28 +181,18 @@ class EditorPage extends React.Component<{navigate: NavigateFunction}, {
                                      onClick={() => this.extendMap(0, 1)}>+</button>
                              </div>),
                              [this.state.size.x * this.state.size.y - 1]: (<div
-                                    className="cell flex-row" key={this.state.size.x * this.state.size.y - 1}
-                                    style={{backgroundImage: `url(${brickWall})`,}}>
-                                <button
-                                    className="btn-reset btn-size"
-                                    title="Import"
-                                    style={{
-                                        backgroundSize: "cover",
-                                    }}
-                                    onClick={() => this.importMap()}><Import style={{
-                                        fill: "white",
-                                        width: "calc(var(--cell-size) / 2.5)",
-                                        // strokeWidth: "2em"
-                                    }}/></button>
+                                    className="cell flex flex-row flex-center" key={this.state.size.x * this.state.size.y - 1}
+                                    style={{backgroundImage: `url(${brickWall})`}}>
                                  <button
                                      className="btn-reset btn-size"
-                                     title="Export"
+                                     title="Save Map"
                                      style={{
                                          backgroundSize: "cover",
+                                         fontSize: "0"
                                      }}
                                      onClick={() => this.exportMap()}><Export style={{
-                                        fill: "white",
-                                        width: "calc(var(--cell-size) / 2.5)",
+                                        stroke: "white",
+                                        width: "calc(var(--cell-size) / /2)",
                                         // strokeWidth: "2em"
                                      }}/></button>
                                 </div>),
@@ -220,5 +223,7 @@ class EditorPage extends React.Component<{navigate: NavigateFunction}, {
 }
 
 export function Editor() {
-    return <EditorPage navigate={useNavigate()}/>
+    const {mapId} = useParams();
+    const ownMapIndex = (mapId === undefined || isNaN(+mapId))?undefined:+mapId;
+    return <EditorPage navigate={useNavigate()} ownMapIndex={ownMapIndex}/>
 }

@@ -1,7 +1,7 @@
 @use 'MainMenu' as *;
 
 .map-picker {
-  width: 100dvmin;
+  width: calc(100dvmin - 2em);
   grid-template-columns: repeat(min(5, var(--own-map-count)), auto);
 
   @media screen and (max-width: 700px) {
@@ -34,7 +34,13 @@
     button {
       @include button-outline(#a29bfe, #6c5ce7);
       padding-block: min(5%, 4em);
-      width: 40%;
+      width: 30%;
+
+      &:last-child {
+        width: 10%;
+        // max-height: max-content;
+        padding-block: 1em;
+      }
     }
   }
 

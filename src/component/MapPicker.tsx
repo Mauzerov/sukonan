@@ -1,16 +1,15 @@
 import {MapGrid} from "./MapGrid";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
-import React from "react";
+import React, {useState} from "react";
 import "../styles/Game.scss"
 import "../styles/MapPicker.scss"
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {getLocalData, setLocalData} from "../ts/LocalData";
+import {ReactComponent as TrashCan} from "../svg/typhoon.svg";
 
-export function MapPicker(
-    props: {
-        onMapSelect?: (map: number) => void
-    }
-) {
-    const maps = JSON.parse(localStorage.getItem('sukonan-maps') || '[]')
+export function MapPicker() {
+    const [maps, setMaps] = useState(getLocalData().personalMaps);
+    const navigate = useNavigate();
     return (
         <>
             {!maps.length && <div
@@ -53,11 +52,21 @@ export function MapPicker(
                                 }}
                                 gridSize={gridSize}/>
                             <div className="map-picker-map-buttons">
-                                <button onClick={() => {props.onMapSelect?.(i)}}>
+                                <button onClick={() => navigate(`/own/${i}`)}>
                                     Play 
                                 </button>
-                                <button>
+                                <button onClick={() => navigate(`/editor/${i}`)}>
                                     Edit 
+                                </button>
+                                <button onClick={() => {
+                                    if (window.confirm("Are You sure, You want to delete this map?\n(it will be lost forever)")) {
+                                        const localData = getLocalData();
+                                        localData.personalMaps = localData.personalMaps.filter((_, index) => index !== i);
+                                        setLocalData(localData);
+                                        setMaps(localData.personalMaps);
+                                    }
+                                }}>
+                                    <TrashCan />
                                 </button>
                             </div>
                         </div>)

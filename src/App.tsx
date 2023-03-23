@@ -47,13 +47,11 @@ export function App() {
                         ]}
                     />
                 } />
-                <Route path="/own" element={<MapPicker onMapSelect={map => {
-                    navigate(`/own/${map}`)
-                }}/>} />
+                <Route path="/own" element={<MapPicker />} />
                 <Route path="/own/:mapId" element={
                     <Game
                         keymap={keyMap}
-                        mapPool={JSON.parse(localStorage.getItem('sukonan-maps')||"[]")}
+                        mapPool={getLocalData().personalMaps}
                         winMessage={{
                             title: "Completed!",
                             text: (<>Congratulations! You have completed your own level.<br/>You can
@@ -65,12 +63,11 @@ export function App() {
                         }}
                     />
                 } />
-                <Route key={new Date().getTime().toString()} path="/editor" element={
-                    <Editor key={new Date().getTime().toString() + ".'"}/>
-                }/>
+                <Route path="/editor" element={<Editor />}/>
+                <Route path="/editor/:mapId" element={<Editor />}/>
                 <Route path="/settings" element={<Settings
                     keymap={keyMap}
-                    onKeyMapChange={(k) => { setKeyMap({...k}); saveKeyMap({...k}); }}/>} />
+                    onKeyMapChange={(k) => { setKeyMap({...k}); saveKeyMap(k); }}/>} />
                 <Route path="/credits" element={<Credits/>} />
                 <Route path="/*" element={<div>404</div>} />
             </Routes>

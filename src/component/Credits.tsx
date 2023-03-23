@@ -13,7 +13,7 @@ export default function Credits() {
                     <li>Help Icon: @HashiCorp</li>
                     <li>Restart Icon: @Ionicons</li>
                     <li>Teleporter Spiral Icon: @game-icons.net</li>
-                    <li>Import/Export Icon: Mary Akveo</li>
+                    <li>Save Icon: @Ananthanath A X Kalaiism</li>
                 </ul>
             </p>
         </div>
