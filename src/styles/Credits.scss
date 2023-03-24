@@ -1,0 +1,33 @@
+.credits {
+	color: white;
+
+	div:not(:last-child) {
+		padding-block-end: 1em;
+	}
+
+	.title, .author {
+		text-align: center;
+	}
+
+	.title {
+		font-size: var(--size-medium);
+		margin-block-end: 0;
+	}
+
+	a {
+		color: #a29bfe;
+
+		&:visited, &:active {
+			color: #a29bfe;
+		}
+
+		&:hover {
+			color: darken(#a29bfe, 10);
+		}
+	}
+
+	.icons {
+		width: fit-content;
+		margin-inline: auto;
+	}
+}
