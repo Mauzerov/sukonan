@@ -47,7 +47,7 @@ export function MapPicker() {
                                         x: mapString.indexOf('S') % gridSize.x,
                                         y: Math.floor(mapString.indexOf('S') / gridSize.x),
                                     },
-                                    porters: filterPorters(mapString, gridSize),
+                                    porters:   filterPorters(mapString, gridSize),
                                     ...filterBoxesAndTargets(mapString, gridSize)
                                 }}
                                 gridSize={gridSize}/>
@@ -66,7 +66,7 @@ export function MapPicker() {
                                         setMaps(localData.personalMaps);
                                     }
                                 }}>
-                                    <TrashCan />
+                                    <TrashCan style={{fill: "darkred"}} />
                                 </button>
                             </div>
                         </div>)
