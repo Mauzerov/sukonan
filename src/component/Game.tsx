@@ -283,14 +283,14 @@ class _Game extends React.Component<GameProps2, GameState> {
 
                     custom={
                         {
-                            [this.width - 2]: (<div
-                                className="cell" key={this.width - 2}
+                            [this.width - 1]: (<div
+                                className="cell flex-center" key={this.width - 1}
                                 style={{ backgroundImage: `url(${brickWall})`}}
                                 onClick={() => this.configureMap(this.map)}
                             ><button style={{ backgroundImage: `url(${refresh})` }} className="btn-reset btn" title="Restart"></button>
                             </div>),
                             3: (<div
-                                    className="cell" key={3}
+                                    className="cell flex-center" key={3}
                                     style={{backgroundImage: `url(${brickWall})`}}
                                     onClick={() => this.setState({ credits: !this.state.credits })}
                             ><button style={{backgroundImage: `url(${info})`}} className="btn-reset btn" title={this.state.credits ? 'Close' : 'Info'}></button>
