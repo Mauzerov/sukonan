@@ -22,9 +22,262 @@ import WinAlert from "./WinAlert";
 
 interface GameProps2 extends GameProps {
     map: number,
-    navigate: NavigateFunction
+    navigate: NavigateFunction,
 }
 
+export function Game1(props: GameProps2) {
+    const mapToParse = (props.mapPool || campaignLevels)[props.map];
+    const configureMap = (mapToParse: string[]) : GameState => {
+        const height = mapToParse.length + 2;
+        const width  = mapToParse[0].length + 2;
+
+        const parsedMap = 'W'.repeat(width) +
+            mapToParse.reduce((prev, now) => `${prev}W${now}W`, '') +
+            'W'.repeat(width);
+
+        const startPosition = parsedMap.indexOf('S');
+
+        return {
+            player: {
+                x: startPosition % width,
+                y: Math.floor(startPosition / width),
+            },
+            map: parsedMap.replaceAll(/[^W]/g, ' '),
+            porters: filterPorters(parsedMap, {x: width, y: height}),
+            ...filterBoxesAndTargets(parsedMap, {x: width, y: height}),
+            credits: false,
+            keyMap: props.keymap,
+            width, height
+        }
+    }
+
+    const [gameState, setGameState] = React.useState<GameState>(configureMap(mapToParse));
+    const isWin = () : boolean => {
+        // Every Target Is Covered By Box
+        return gameState.targets.every(
+            box => gameState.boxes.some(target => target.x === box.x && target.y === box.y)
+        );
+    }
+
+    const move = (position: Position, direction: Direction) : Position | null => {
+        const newPosition: Position = { ...position }
+        switch (direction) {
+            case Direction.NORTH:
+                newPosition.y -= 1; break;
+            case Direction.SOUTH:
+                newPosition.y += 1; break;
+            case Direction.EAST:
+                newPosition.x += 1; break;
+            case Direction.WEST:
+                newPosition.x -= 1; break;
+        }
+
+        // Wall Collision
+        if (gameState.map[newPosition.x + newPosition.y * gameState.width] === 'W') {
+            return null;
+        }
+        return newPosition;
+    }
+
+    const movePlayer = (direction: Direction) : boolean => {
+        let nextPosition = move(gameState.player, direction);
+
+        // Wall Collision
+        if (nextPosition === null) {
+            return false;
+        }
+        const moveBoxes = (position: Position, direction: Direction, boxIndex?:number) : boolean => {
+            for (let i = 0; i < gameState.boxes.length; ++i) {
+                if (boxIndex !== undefined && i === boxIndex) {
+                    continue;
+                }
+                const box = gameState.boxes[i];
+                // if box is not in position continue
+                if (box.x !== position.x || box.y !== position.y) {
+                    continue;
+                }
+
+                const newBoxPosition = move(box, direction);
+                if (newBoxPosition === null) {
+                    console.log("box(es) didn't move (wall)", box, position);
+                    return false;
+                }
+                for (let j = 0; j < gameState.boxes.length; ++j) {
+                    if (i === j) continue;
+                    if (gameState.boxes[j].x === newBoxPosition.x && gameState.boxes[j].y === newBoxPosition.y) {
+                        const moved = moveBoxes(newBoxPosition, direction, i);
+
+                        if (!moved) {
+                            console.log("box(es) cannot move (other boxes cannot)", box, position);
+                            return false;
+                        }
+                    }
+                }
+                // Box did move, update state
+                gameState.boxes[i] = newBoxPosition;
+            }
+            return true;
+        }
+
+        if (!moveBoxes(nextPosition, direction)) return false;
+
+        for (let { blue, orange } of gameState.porters) {
+            const blueIndex   = blue.x         + blue.y         * gameState.width;
+            const orangeIndex = orange.x       + orange.y       * gameState.width;
+            const playerIndex = nextPosition.x + nextPosition.y * gameState.width;
+
+            if (blueIndex   === playerIndex && !overlap(orange, gameState.boxes)) nextPosition = orange;
+            if (orangeIndex === playerIndex && !overlap(blue, gameState.boxes)  ) nextPosition = blue;
+        }
+        // Pull box if behind
+        const behind = move(gameState.player, opposite(direction));
+
+        if (behind !== null) {
+            for (let i = 0; i < gameState.boxes.length; ++i) {
+                const box = gameState.boxes[i];
+                if (box.x === behind.x && box.y === behind.y) {
+                    gameState.boxes[i] = gameState.player;
+                }
+            }
+        }
+
+        setGameState((old) => ({
+            ...old,
+            player: nextPosition!,
+            boxes: gameState.boxes
+        }))
+
+        if (isWin()) setTimeout(() => {
+            props.onWin?.(props.map);
+        }, 0);
+
+        return true;
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+        if (event.code === gameState.keyMap.restart) {
+            return configureMap(mapToParse);
+        }
+
+        if (event.code === gameState.keyMap.menu) {
+            return setGameState((old) => ({ ...old, credits: !old.credits }));
+        }
+
+        if (gameState.keyMap.up.includes(event.code)) {
+            return movePlayer(Direction.NORTH)
+        }
+        if (gameState.keyMap.down.includes(event.code)) {
+            return movePlayer(Direction.SOUTH)
+        }
+        if (gameState.keyMap.left.includes(event.code)) {
+            return movePlayer(Direction.WEST)
+        }
+        if (gameState.keyMap.right.includes(event.code)) {
+            return movePlayer(Direction.EAST)
+        }
+    }
+
+    const handleTouchStart = (event: TouchEvent) => {
+        let target = event.target as HTMLElement;
+        if (target instanceof HTMLSpanElement) {
+            target = target.parentElement as HTMLElement;
+        }
+        let grid = target.parentElement as HTMLElement;
+        if (grid === null || !grid.children) return;
+
+        for (let i = 0; i < grid.children.length; ++i) {
+            const child = grid.children[i];
+            if (child !== target) continue
+
+            const cell = {x: i % gameState.width, y: ~~(i / gameState.width)};
+            const player = gameState.player;
+
+            if (cell.x === player.x && cell.y === player.y) {
+                return;
+            }
+            if (cell.x === player.x) {
+                movePlayer(
+                    cell.y > player.y ? Direction.SOUTH : Direction.NORTH
+                )
+            } else if (cell.y === player.y) {
+                movePlayer(
+                    cell.x > player.x ? Direction.EAST : Direction.WEST
+                )
+            }
+        }
+    }
+    
+    useEffect(() => {
+        document.addEventListener("keydown", handleKeyDown);
+        document.addEventListener("touchstart",  handleTouchStart);
+
+        return () => {
+            document.removeEventListener("keydown", handleKeyDown);
+            document.removeEventListener("touchstart",  handleTouchStart);
+        }
+    }, [handleKeyDown, handleTouchStart]);
+
+    return (
+        <div style={
+            {
+                position: 'relative',
+                "--cell-size": `min(
+                                    calc(100dvh / ${gameState.height}),
+                                    calc(100dvw / ${gameState.width})
+                                   )`,
+                overflowX: 'hidden',
+            } as React.CSSProperties
+        }>
+            <MapGrid
+                gameElements={gameState}
+                map={gameState.map}
+                gridSize={{x: gameState.width, y: gameState.height}}
+
+                custom={
+                    {
+                        [gameState.width - 1]: (<div
+                            className="cell flex-center" key={gameState.width - 1}
+                            style={{ backgroundImage: `url(${brickWall})`}}
+                            onClick={() => setGameState(configureMap(mapToParse))}
+                        ><button style={{ backgroundImage: `url(${refresh})` }} className="btn-reset btn" title="Restart"></button>
+                        </div>),
+                        3: (<div
+                            className="cell flex-center" key={3}
+                            style={{backgroundImage: `url(${brickWall})`}}
+                            onClick={() => setGameState((old) => ({ ...old, credits: !old.credits }))}
+                        ><button style={{backgroundImage: `url(${info})`}} className="btn-reset btn" title={gameState.credits ? 'Close' : 'Info'}></button>
+                        </div>),
+                        0: (<div
+                            title="Main Menu"
+                            className="cell" key={0}
+                            style={{
+                                backgroundImage: `url(${brickWall})`,
+                                lineHeight: 'calc(var(--cell-size))',
+                                fontSize: 'calc(var(--cell-size) * 0.5)',
+                                color: 'white',
+                                paddingInlineStart: '.5em',
+                                cursor: 'pointer',
+                            }}
+                            onClick={() => {
+                                // Main Menu
+                                if (window.confirm("Are you sure you want to go back to the main menu?\nCurrent Level progress will be lost."))
+                                    props.navigate('/');
+                            }}
+                        >SukOnAn
+                        </div>)
+                    }
+                }
+            />
+
+            <GameMenu
+                visible={gameState.credits}
+                keymap= {gameState.keyMap}
+                onKeyMapChange={(keyMap) => {setGameState((old) => ({ ...old, keyMap })); saveKeyMap({...keyMap}); } }
+            />
+            {props.winMessage && isWin() && <WinAlert {...props.winMessage} />}
+        </div>
+    );
+}
+/*
 class _Game extends React.Component<GameProps2, GameState> {
     protected height: number = 0;
     protected width: number = 0
@@ -327,7 +580,7 @@ class _Game extends React.Component<GameProps2, GameState> {
         );
     }
 }
-
+*/
 export default function Game(props: GameProps) {
     const {mapId} = useParams();
     const navigate = useNavigate();
@@ -337,13 +590,11 @@ export default function Game(props: GameProps) {
     if (isNaN(+mapId))       return <Navigate to="/" replace/>
     if (+mapId < 0)          return <Navigate to="/" replace/>
 
-    const localData = getLocalData();
-
     for (let condition of (props.conditions || [])) {
         if (condition.func(+mapId)) return condition.element as any ;
     }
 
     return (<>
-        <_Game navigate={navigate} {...props} map={+(mapId||"0")} />
+        <Game1 navigate={navigate} {...props} map={+(mapId||"0")} key={mapId} />
     </>)
 }

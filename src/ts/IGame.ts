@@ -28,6 +28,8 @@ export interface GameState extends GameElements {
     map: string,
     credits: boolean,
     keyMap: KeyMap,
+    readonly width: number,
+    readonly height: number,
 }
 
 
