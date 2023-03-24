@@ -36,7 +36,6 @@ class _Game extends React.Component<GameProps2, GameState> {
 
     constructor(props: GameProps2) {
         super(props);
-        console.log(props);
         this.configureMap((props.mapPool || _Game.campaign)[props.map]);
 
         // this.init(
@@ -341,7 +340,6 @@ export default function Game(props: GameProps) {
     const localData = getLocalData();
 
     for (let condition of (props.conditions || [])) {
-        console.log(condition)
         if (condition.func(+mapId)) return condition.element as any ;
     }
 
