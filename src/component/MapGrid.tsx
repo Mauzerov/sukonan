@@ -17,7 +17,6 @@ interface MapGridProps {
 
 export function MapGrid(props: MapGridProps) {
     const pp = props.gameElements.player;
-    console.log(props);
     return (
         <div className="map-grid" style={
             {
