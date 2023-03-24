@@ -61,9 +61,34 @@ class EditorPage extends React.Component<{navigate: NavigateFunction, ownMapInde
         return JSON.stringify(map);
     }
 
-    private nextElement = (element: string, delta: number) => {
+    private nextElement(element: string, delta: number) {
         const index = EditorPage.elements.indexOf(element);
-        return EditorPage.elements[(index + delta + EditorPage.elements.length) % EditorPage.elements.length];
+
+        const canBeNext = (element: string) => {
+            const count = this.state.map.join().match(new RegExp(element, 'g'))?.length ?? 0;
+            const isElementNumber = !isNaN(+element);
+
+            if (isElementNumber) {
+                return count < 2;
+            }
+
+            if (element === "S") {
+                return count < 1;
+            }
+
+            return true;
+        }
+
+        if (index === -1) return element;
+        const sign = Math.sign(delta);
+        let next = EditorPage.elements[(index + delta + EditorPage.elements.length) % EditorPage.elements.length];
+
+        while (!canBeNext(next)) {
+            delta += sign;
+            next = EditorPage.elements[(index + delta + EditorPage.elements.length) % EditorPage.elements.length];
+        }
+
+        return next;
     }
 
 
