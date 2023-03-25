@@ -1,8 +1,7 @@
 import {useState} from "react";
 import {MainMenu} from "./component/MainMenu";
-import {Editor} from "./component/Editor";
+import Editor from "./component/Editor";
 import Game from "./component/Game";
-import {GameMenu} from "./component/GameMenu";
 import {defaultKeyMap, saveKeyMap, getKeyMap} from "./ts/KeyMap";
 import {MapPicker} from "./component/MapPicker";
 import {HashRouter, Outlet, Route, Routes, Navigate, useNavigate} from "react-router-dom";

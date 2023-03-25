@@ -2,7 +2,7 @@
 
 .map-picker {
   width: calc(100dvmin - 2em);
-  grid-template-columns: repeat(min(5, var(--own-map-count)), auto);
+  grid-template-columns: repeat(min(4, var(--own-map-count)), auto);
 
   @media screen and (max-width: 700px) {
     grid-template-columns: repeat(min(3, var(--own-map-count)), auto);

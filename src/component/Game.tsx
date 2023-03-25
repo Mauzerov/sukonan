@@ -10,16 +10,13 @@ import {saveKeyMap} from "../ts/KeyMap";
 import {overlap} from "../util/Util";
 import {MapGrid} from "./MapGrid";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
-import {Navigate, NavigateFunction, useNavigate, useParams} from 'react-router-dom';
+import {Navigate, useNavigate, useParams} from 'react-router-dom';
 import {campaignLevels} from "../ts/const";
 import WinAlert from "./WinAlert";
 
-interface GameProps2 extends GameProps {
-    map: number,
-    navigate: NavigateFunction,
-}
+function GameMap(props: GameProps & {map: number}) {
+    const navigate = useNavigate();
 
-export function Game1(props: GameProps2) {
     const mapToParse = (props.mapPool || campaignLevels)[props.map];
     const configureMap = useCallback((mapToParse: string[]) : GameState => {
         const height = mapToParse.length + 2;
@@ -202,7 +199,7 @@ export function Game1(props: GameProps2) {
             }
         }
     }, [gameState.player, gameState.width, movePlayer])
-    
+
     useEffect(() => {
         document.addEventListener("keydown", handleKeyDown);
         document.addEventListener("touchstart",  handleTouchStart);
@@ -257,7 +254,7 @@ export function Game1(props: GameProps2) {
                             onClick={() => {
                                 // Main Menu
                                 if (window.confirm("Are you sure you want to go back to the main menu?\nCurrent Level progress will be lost."))
-                                    props.navigate('/');
+                                    navigate('/');
                             }}
                         >SukOnAn
                         </div>)
@@ -276,8 +273,6 @@ export function Game1(props: GameProps2) {
 }
 export default function Game(props: GameProps) {
     const {mapId} = useParams();
-    const navigate = useNavigate();
-    console.log(+(mapId||"0"))
 
     if (mapId === undefined) return <Navigate to="/" replace/>
     if (isNaN(+mapId))       return <Navigate to="/" replace/>
@@ -287,7 +282,5 @@ export default function Game(props: GameProps) {
         if (condition.func(+mapId)) return condition.element as any ;
     }
 
-    return (<>
-        <Game1 navigate={navigate} {...props} map={+(mapId||"0")} key={mapId} />
-    </>)
+    return (<GameMap {...props} map={+(mapId)} key={mapId} />)
 }

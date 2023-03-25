@@ -1,11 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {BrowserRouter, Routes, Route, HashRouter} from "react-router-dom";
+import {HashRouter} from "react-router-dom";
 import './styles/index.css';
 import reportWebVitals from './reportWebVitals';
-import {Editor} from "./component/Editor";
 import {App} from "./App";
-import {MapPicker} from "./component/MapPicker";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
