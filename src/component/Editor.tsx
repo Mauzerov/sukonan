@@ -48,10 +48,11 @@ export default function Editor() {
     }, [mapId]);
 
     const exportMap = useCallback(() => {
+        console.log(state)
         const map = state.map.splice(
             1, state.size.y - 2
         ).map(it => it.slice(1, state.size.x - 1))
-
+        console.log(map)
         withLocalData((localData) => {
             if (state.ownMapIndex === undefined)
                 localData.personalMaps = [...localData.personalMaps, map];
@@ -103,34 +104,36 @@ export default function Editor() {
 
     const resizeMap = useCallback((deltaX: number, deltaY: number) => {
         if (state.size.x + deltaX < minSize || state.size.y + deltaY < minSize) return;
+        let map = [...state.map];
 
         if (deltaX > 0) {
-            state.map[0] = state.map[state.size.y - 1] = "W".repeat(state.size.x + deltaX)
+            map[0] = map[state.size.y - 1] = "W".repeat(state.size.x + deltaX)
             for (let i = 1; i < state.size.y - 1; i++) {
-                state.map[i] += " ".repeat(deltaX - 1) + 'W';
+                map[i] = map[i].slice(0, -1);
+                map[i] += " ".repeat(deltaX) + 'W';
             }
         }
         else if (deltaX < 0) {
             for (let i = 0; i < state.size.y; i++) {
-                state.map[i] = state.map[i].substring(0, state.size.x + deltaX - 1) + "W";
+                map[i] = map[i].substring(0, state.size.x + deltaX - 1) + "W";
             }
         }
 
         if (deltaY > 0) {
             for (let i = 0; i < deltaY; i++) {
-                state.map[state.map.length - 1] = "W" + " ".repeat(state.size.x - 2) + "W";
-                state.map.push("W".repeat(state.size.x));
+                map[map.length - 1] = "W" + " ".repeat(state.size.x - 2) + "W";
+                map.push("W".repeat(state.size.x));
             }
         }
         else if (deltaY < 0) {
-            state.map = state.map.slice(0, state.size.y + deltaY);
-            state.map[state.map.length - 1] = "W".repeat(state.size.x);
+            map = map.slice(0, state.size.y + deltaY);
+            map[map.length - 1] = "W".repeat(state.size.x);
         }
-
+        console.log('Set State')
         setState({
             ...state,
-            map: state.map,
-            size: {x: state.size.x + deltaX, y: state.size.y + deltaY}
+            map: [...map],
+            size: {x: map[0].length, y: map.length}
         })
     }, [state])
 
