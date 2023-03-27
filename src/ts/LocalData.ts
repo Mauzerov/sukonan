@@ -16,7 +16,13 @@ export function getLocalData(): LocalData {
     return defaultLocalData;
 }
 
-export function setLocalData(localData: LocalData) {
+function setLocalData(localData: LocalData) {
     localStorage.setItem("localData", JSON.stringify(localData));
 }
 
+export function withLocalData<T>(callback: (localData: LocalData) => T): T {
+    const localData = getLocalData();
+    const result = callback(localData);
+    setLocalData(localData);
+    return result;
+}

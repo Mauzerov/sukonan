@@ -4,9 +4,9 @@ import Editor from "./component/Editor";
 import Game from "./component/Game";
 import {defaultKeyMap, saveKeyMap, getKeyMap} from "./ts/KeyMap";
 import {MapPicker} from "./component/MapPicker";
-import {HashRouter, Outlet, Route, Routes, Navigate, useNavigate} from "react-router-dom";
+import {Route, Routes, Navigate, useNavigate} from "react-router-dom";
 import {campaignLevels} from "./ts/const";
-import {getLocalData, setLocalData} from "./ts/LocalData";
+import {getLocalData, withLocalData} from "./ts/LocalData";
 import Settings from "./component/Settings";
 import Credits from "./component/Credits";
 
@@ -26,7 +26,10 @@ export function App() {
                         keymap={keyMap}
                         mapPool={campaignLevels}
                         onWin={(current) => {
-                            setLocalData({...getLocalData(), reachedCampaignLevel: current + 1});
+                            withLocalData((localData) => {
+                                if (localData.reachedCampaignLevel <= current)
+                                    localData.reachedCampaignLevel = current + 1;
+                            })
                         }}
                         winMessage={{
                             title: "Completed!",

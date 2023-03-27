@@ -4,7 +4,7 @@ import React, {useState} from "react";
 import "../styles/Game.scss"
 import "../styles/MapPicker.scss"
 import {Link, useNavigate} from "react-router-dom";
-import {getLocalData, setLocalData} from "../ts/LocalData";
+import {getLocalData, withLocalData} from "../ts/LocalData";
 import {ReactComponent as TrashCan} from "../svg/typhoon.svg";
 
 export function MapPicker() {
@@ -60,10 +60,10 @@ export function MapPicker() {
                                 </button>
                                 <button onClick={() => {
                                     if (window.confirm("Are You sure, You want to delete this map?\n(it will be lost forever)")) {
-                                        const localData = getLocalData();
-                                        localData.personalMaps = localData.personalMaps.filter((_, index) => index !== i);
-                                        setLocalData(localData);
-                                        setMaps(localData.personalMaps);
+                                        setMaps(withLocalData((localData) => {
+                                            localData.personalMaps = localData.personalMaps.filter((_, index) => index !== i);
+                                            return localData;
+                                        }).personalMaps)
                                     }
                                 }}>
                                     <TrashCan style={{fill: "darkred"}} />

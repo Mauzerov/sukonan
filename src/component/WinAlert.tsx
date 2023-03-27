@@ -1,11 +1,6 @@
-import {ButtonHTMLAttributes, ReactNode} from "react";
 import '../styles/WinAlert.scss'
+import {WinAlertProps} from "../ts/IGame";
 
-export interface WinAlertProps {
-    title: ReactNode,
-    text?: ReactNode,
-    buttons: ButtonHTMLAttributes<HTMLButtonElement>[],
-}
 
 export default function WinAlert(
     props: WinAlertProps

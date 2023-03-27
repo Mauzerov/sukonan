@@ -2,13 +2,7 @@ import '../styles/MainMenu.scss'
 import {Link} from "react-router-dom";
 import {getLocalData} from "../ts/LocalData";
 
-export function MainMenu(props: {
-    onPlay?: () => void,
-    onPlayLocal?: () => void,
-    onEditor?: () => void,
-    onSettings?: () => void,
-    onCredits?: () => void,
-}) {
+export function MainMenu() {
     const campaignLevel = getLocalData()
     const canContinue = campaignLevel.reachedCampaignLevel > 0;
 

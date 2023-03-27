@@ -1,7 +1,7 @@
 import KeyMap from "./KeyMap";
 import Teleporter from "./Teleporter";
-import {ReactNode} from "react";
-import {WinAlertProps} from "../component/WinAlert";
+import {ButtonHTMLAttributes, ReactNode} from "react";
+
 
 export interface Position {
     x: number,
@@ -30,6 +30,12 @@ export interface GameState extends GameElements {
     keyMap: KeyMap,
     readonly width: number,
     readonly height: number,
+}
+
+export interface WinAlertProps {
+    title: ReactNode,
+    text?: ReactNode,
+    buttons: ButtonHTMLAttributes<HTMLButtonElement>[],
 }
 
 

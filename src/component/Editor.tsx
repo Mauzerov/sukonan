@@ -5,7 +5,7 @@ import brickWall from "../svg/brick-wall.svg";
 import { ReactComponent as Export} from "../svg/save.svg";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
 import {useNavigate, useParams} from "react-router-dom";
-import {getLocalData, setLocalData} from "../ts/LocalData";
+import {getLocalData, withLocalData} from "../ts/LocalData";
 
 
 export const minSize = 5;
@@ -15,9 +15,8 @@ export const defaultSize = {x: minSize, y: minSize}
 export const defaultMap : string[] = _defaultMap.match(new RegExp(`.{1,${minSize}}`, 'g'))!
 
 
-export default function() {
+export default function Editor() {
     const {mapId} = useParams();
-
     const navigate = useNavigate();
 
     const [state, setState] = useState<{
@@ -53,16 +52,15 @@ export default function() {
             1, state.size.y - 2
         ).map(it => it.slice(1, state.size.x - 1))
 
-        const localData = getLocalData();
+        withLocalData((localData) => {
+            if (state.ownMapIndex === undefined)
+                localData.personalMaps = [...localData.personalMaps, map];
+            else localData.personalMaps[state.ownMapIndex] = map;
+        })
 
-        if (state.ownMapIndex === undefined)
-            localData.personalMaps = [...localData.personalMaps, map];
-        else localData.personalMaps[state.ownMapIndex] = map;
-
-        setLocalData(localData);
         alert("Map saved! You can now access it in the game menu.");
         if (state.ownMapIndex === undefined)
-            navigate(`/editor/${localData.personalMaps.length - 1}`, {replace: true})
+            navigate(`/editor/${getLocalData().personalMaps.length - 1}`, {replace: true})
     }, [state, navigate])
 
     const nextElement = useCallback((element: string, delta: number) => {
@@ -93,58 +91,46 @@ export default function() {
         return next;
     }, [state])
 
-    const onLeftClick = useCallback((index: number) => {
+    const shuffleCell = useCallback((index: number, delta: number) => {
         const x = index % state.size.x;
         const y = ~~(index / state.size.x);
-        state.map[y] = state.map[y].slice(0, x) + nextElement(state.map[y][x], 1) + state.map[y].slice(x + 1);
+        state.map[y] = state.map[y].slice(0, x) + nextElement(state.map[y][x], delta) + state.map[y].slice(x + 1);
         setState({...state});
     }, [state, nextElement])
 
-    const onRightClick = useCallback((index: number) => {
-        const x = index % state.size.x;
-        const y = ~~(index / state.size.x);
-        state.map[y] = state.map[y].slice(0, x) + nextElement(state.map[y][x], -1) + state.map[y].slice(x + 1);
-        setState({...state});
-    }, [state, nextElement])
+    const onLeftClick  = (index: number) => shuffleCell(index, 1);
+    const onRightClick = (index: number) => shuffleCell(index, -1);
 
-    const extendMap = useCallback((deltaX: number, deltaY: number) => {
-        if (deltaY) {
+    const resizeMap = useCallback((deltaX: number, deltaY: number) => {
+        if (state.size.x + deltaX < minSize || state.size.y + deltaY < minSize) return;
+
+        if (deltaX > 0) {
+            state.map[0] = state.map[state.size.y - 1] = "W".repeat(state.size.x + deltaX)
+            for (let i = 1; i < state.size.y - 1; i++) {
+                state.map[i] += " ".repeat(deltaX - 1) + 'W';
+            }
+        }
+        else if (deltaX < 0) {
+            for (let i = 0; i < state.size.y; i++) {
+                state.map[i] = state.map[i].substring(0, state.size.x + deltaX - 1) + "W";
+            }
+        }
+
+        if (deltaY > 0) {
             for (let i = 0; i < deltaY; i++) {
                 state.map[state.map.length - 1] = "W" + " ".repeat(state.size.x - 2) + "W";
                 state.map.push("W".repeat(state.size.x));
             }
         }
-        if (deltaX) {
-            for (let i = 0; i < state.size.y; i++) {
-                state.map[i] = state.map[i].substring(0, state.size.x - 1)
-                state.map[i] += ((i === 0 || i === state.size.y - 1)?"W":" ").repeat(deltaX) + "W";
-            }
+        else if (deltaY < 0) {
+            state.map = state.map.slice(0, state.size.y + deltaY);
+            state.map[state.map.length - 1] = "W".repeat(state.size.x);
         }
+
         setState({
             ...state,
             map: state.map,
             size: {x: state.size.x + deltaX, y: state.size.y + deltaY}
-        })
-    }, [state])
-
-    const reduceMap = useCallback((deltaX: number, deltaY: number) => {
-        if (state.size.x - deltaX < minSize || state.size.y - deltaY < minSize) return;
-
-        if (deltaY) {
-            for (let i = 0; i < deltaY; i++) {
-                state.map.pop();
-                state.map[state.map.length - 1] = "W".repeat(state.size.x);
-            }
-        }
-        if (deltaX) {
-            for (let i = 0; i < state.size.y; i++) {
-                state.map[i] = state.map[i].substring(0, state.size.x - 1 - deltaX) + "W";
-            }
-        }
-        setState({
-            ...state,
-            map: state.map,
-            size: {x: state.size.x - deltaX, y: state.size.y - deltaY}
         })
     }, [state])
 
@@ -182,11 +168,11 @@ export default function() {
                                  <button
                                      className="btn-reset btn-size"
                                      title="Reduce X"
-                                     onClick={() => reduceMap(1, 0)}>-</button>
+                                     onClick={() => resizeMap(-1, 0)}>-</button>
                                  <button
                                      className="btn-reset btn-size"
                                      title="Increase X"
-                                     onClick={() => extendMap(1, 0)}>+</button>
+                                     onClick={() => resizeMap(1, 0)}>+</button>
                              </div>),
                              [state.size.x * (state.size.y - 1)]: (<div
                                  className="cell flex-row" key={state.size.x * (state.size.y - 1)}
@@ -194,11 +180,11 @@ export default function() {
                                  <button
                                      className="btn-reset btn-size"
                                      title="Reduce Y"
-                                     onClick={() => reduceMap(0, 1)}>-</button>
+                                     onClick={() => resizeMap(0, -1)}>-</button>
                                  <button
                                      className="btn-reset btn-size"
                                      title="Increase Y"
-                                     onClick={() => extendMap(0, 1)}>+</button>
+                                     onClick={() => resizeMap(0, 1)}>+</button>
                              </div>),
                              [state.size.x * state.size.y - 1]: (<div
                                  className="cell flex flex-row flex-center" key={state.size.x * state.size.y - 1}
@@ -208,12 +194,11 @@ export default function() {
                                      title="Save Map"
                                      style={{
                                          backgroundSize: "cover",
-                                         fontSize: "0"
+                                         fontSize: "0" // centers the icon
                                      }}
                                      onClick={() => exportMap()}><Export style={{
                                      stroke: "white",
-                                     width: "calc(var(--cell-size) / /2)",
-                                     // strokeWidth: "2em"
+                                     width: "calc(var(--cell-size) / 2)",
                                  }}/></button>
                              </div>),
                              0: (<div
