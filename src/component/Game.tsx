@@ -71,6 +71,8 @@ function GameMap(props: GameProps & {map: number}) {
     }, [gameState.map, gameState.width])
 
     const movePlayer = useCallback((direction: Direction) : boolean => {
+        if (gameState.credits) return false;
+
         let nextPosition = move(gameState.player, direction);
 
         // Wall Collision

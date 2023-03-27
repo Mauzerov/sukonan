@@ -8,7 +8,9 @@ function Control(props: { keyCode: string, onChange: (key: string) => void }) {
     useEffect(() => {
         if(listening) {
             const listener = (e: KeyboardEvent) => {
-                props.onChange(e.code);
+                if (!(props.keyCode === "Escape" || e.code === "Escape")) {
+                    props.onChange(e.code);
+                }
                 setListening(false);
             }
             window.addEventListener("keydown", listener);
@@ -16,7 +18,7 @@ function Control(props: { keyCode: string, onChange: (key: string) => void }) {
                 window.removeEventListener("keydown", listener);
             }
         }
-    });
+    }, [props, listening]);
 
     return (
         <div className="key-change">

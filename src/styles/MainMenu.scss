@@ -13,7 +13,6 @@
   font-weight: bold;
   transition: all 0.2s ease-in-out;
   border: 1px solid $color;
-  // border-radius: 10px;
   position: relative;
 
   &:hover, &:focus {
@@ -72,8 +71,6 @@
         }
       }
     }
-
-
 
     &:hover, &:focus {
       @media (prefers-reduced-motion: no-preference) and

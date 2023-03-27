@@ -50,9 +50,6 @@
 
     .key-change {
       display: flex;
-      &, & * {
-        //font-size: var(--size-xsmall);
-      }
 
       & :last-child {
         margin-inline-start: auto;

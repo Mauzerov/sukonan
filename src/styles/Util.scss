@@ -1,0 +1,36 @@
+.btn-reset {
+  border: none;
+  background: transparent;
+  background-size: contain;
+  width: 100%;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.btn {
+  width: 50%;
+  height: 50%;
+  margin: 25% auto auto;
+}
+
+.btn-size {
+  font-size: calc(var(--cell-size) / 2);
+  text-align: center;
+  flex: 1;
+  max-width: 50%;;
+  margin: 5px;
+  color: white;
+}
+
+[class*="flex"] {
+  display: flex;
+}
+.flex-row {
+  flex-direction: row;
+  align-items: center;
+}
+.flex-center {
+  align-items: center;
+  justify-content: center;
+}

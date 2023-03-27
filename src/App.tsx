@@ -9,6 +9,7 @@ import {campaignLevels} from "./ts/const";
 import {getLocalData, withLocalData} from "./ts/LocalData";
 import Settings from "./component/Settings";
 import Credits from "./component/Credits";
+import CampaignVictory from "./component/Victory";
 
 export function App() {
     const [keyMap, setKeyMap] = useState(getKeyMap);
@@ -21,6 +22,7 @@ export function App() {
             <Routes>
                 <Route path="/" index element={<MainMenu />} />
                 <Route path="/campaign" element={<Navigate to="/campaign/0" replace/>}/>
+                <Route path="/campaign/victory" element={<CampaignVictory />}/>
                 <Route path="/campaign/:mapId" element={
                     <Game
                         keymap={keyMap}
@@ -45,7 +47,10 @@ export function App() {
                         conditions={[
                             {func: (mapId) => {
                                 return localData.reachedCampaignLevel < mapId
-                            }, element: (<Navigate to={`/campaign/${localData.reachedCampaignLevel}`} replace/>)}
+                            }, element: (<Navigate to={`/campaign/${localData.reachedCampaignLevel}`} replace/>)},
+                            {func: (mapId) => {
+                                    return mapId >= campaignLevels.length
+                                }, element: (<Navigate to={`/campaign/victory`} replace/>)}
                         ]}
                     />
                 } />
