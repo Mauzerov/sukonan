@@ -5,7 +5,7 @@ import "../styles/Game.scss"
 import "../styles/MapPicker.scss"
 import {Link, useNavigate} from "react-router-dom";
 import {getLocalData, withLocalData} from "../ts/LocalData";
-import {ReactComponent as TrashCan} from "../svg/typhoon.svg";
+import {ReactComponent as TrashCan} from "../svg/trashcan.svg";
 
 export function MapPicker() {
     const [maps, setMaps] = useState(getLocalData().personalMaps);
