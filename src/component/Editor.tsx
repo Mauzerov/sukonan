@@ -48,11 +48,9 @@ export default function Editor() {
     }, [mapId]);
 
     const exportMap = useCallback(() => {
-        console.log(state)
         const map = state.map.slice(
             1, state.size.y - 2
         ).map(it => it.slice(1, state.size.x - 1))
-        console.log(map)
         withLocalData((localData) => {
             if (state.ownMapIndex === undefined)
                 localData.personalMaps = [...localData.personalMaps, map];
