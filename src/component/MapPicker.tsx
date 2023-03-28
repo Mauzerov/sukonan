@@ -22,7 +22,9 @@ export function MapPicker() {
                 style={{
                 display: 'grid',
                 // width: "100%",
+                padding: "1rem",
                 gap: "1rem",
+                overflow: "hidden scroll",
                 "--own-map-count": maps.length,
                 // aspectRatio: "1 / 1",
             } as React.CSSProperties}>

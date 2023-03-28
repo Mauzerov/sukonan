@@ -1,15 +1,29 @@
 @use 'MainMenu' as *;
 
 .map-picker {
-  width: calc(100dvmin - 2em);
-  grid-template-columns: repeat(min(4, var(--own-map-count)), auto);
+  &::-webkit-scrollbar {
+    width: .5em;
 
-  @media screen and (max-width: 700px) {
-    grid-template-columns: repeat(min(3, var(--own-map-count)), auto);
+    &-track {
+      box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
+
+    &-thumb {
+      background-color: darkgrey;
+      outline: 1px solid slategrey;
+      border-radius: .5em;
+    }
   }
 
-  @media screen and (max-width: 400px) {
+  width: calc(100dvmin - 2em);
+  grid-template-columns: repeat(min(3, var(--own-map-count)), auto);
+
+  @media screen and (max-width: 670px) {
     grid-template-columns: repeat(min(2, var(--own-map-count)), auto);
+  }
+
+  @media screen and (max-width: 550px) {
+    grid-template-columns: repeat(min(1, var(--own-map-count)), auto);
   }
 
   &__no-maps .button {
@@ -23,27 +37,38 @@
   &-map &-map-buttons {
     display: none;
     position: absolute;
-    flex-direction: row;
-    align-items: center;
+    grid-template-areas: "play delete" "edit delete";
     justify-content: center;
     gap: 5%;
     inset: 0;
     z-index: 9999999;
     background: rgb(0 0 0 / .5);
+    container-type: inline-size;
 
     button {
       @include button-outline(#a29bfe, #6c5ce7);
-      padding-block: min(5%, 4em);
-      width: 30%;
+      width: 5em;
+      font-size: 3cqh;
+
+      &:first-child {
+        grid-area: play;
+        align-self: end;
+      }
+
+      &:nth-child(2) {
+        align-self: start;
+        grid-area: edit;
+      }
 
       &:last-child {
-        width: 10%;
-        padding-block: 1em;
+        align-self: center;
+        grid-area: delete;
+        font-size: 2cqh;
       }
     }
   }
 
   &-map:is(:hover, :focus) &-map-buttons {
-    display: flex;
+    display: grid;
   }
 }
