@@ -22,7 +22,7 @@
     grid-template-columns: repeat(min(2, var(--own-map-count)), auto);
   }
 
-  @media screen and (max-width: 550px) {
+  @media screen and (max-width: 550px), (orientation: landscape)  {
     grid-template-columns: repeat(min(1, var(--own-map-count)), auto);
   }
 
