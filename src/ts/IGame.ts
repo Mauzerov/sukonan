@@ -35,7 +35,7 @@ export interface GameState extends GameElements {
 export interface WinAlertProps {
     title: ReactNode,
     text?: ReactNode,
-    buttons: ButtonHTMLAttributes<HTMLButtonElement>[],
+    buttons: {children: ReactNode, onClick: (() => void) | ((map: number) => void)}[],
 }
 
 

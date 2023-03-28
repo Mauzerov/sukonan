@@ -269,7 +269,7 @@ function GameMap(props: GameProps & {map: number}) {
                 keymap= {gameState.keyMap}
                 onKeyMapChange={(keyMap) => {setGameState((old) => ({ ...old, keyMap })); saveKeyMap({...keyMap}); } }
             />
-            {props.winMessage && isWin() && <WinAlert {...props.winMessage} />}
+            {props.winMessage && isWin() && <WinAlert {...props.winMessage} map={props.map} />}
         </div>
     );
 }

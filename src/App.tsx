@@ -37,9 +37,8 @@ export function App() {
                             title: "Completed!",
                             text: (<>Congratulations! You have completed another level of the campaign.<br />You can continue playing or go back to the main menu.</>),
                             buttons: [
-                                {children: "Continue",  onClick: () => {
-                                    const localData = getLocalData();
-                                    navigate(`/campaign/${localData.reachedCampaignLevel}`);
+                                {children: "Continue",  onClick: (map: number) => {
+                                    navigate(`/campaign/${map + 1}`);
                                 }},
                                 {children: "Main Menu", onClick: () => { navigate("/"); }},
                             ]

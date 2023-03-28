@@ -3,7 +3,7 @@ import {WinAlertProps} from "../ts/IGame";
 
 
 export default function WinAlert(
-    props: WinAlertProps
+    props: WinAlertProps & {map: number}
 ) {
     return (
         <div className="win-alert">
@@ -11,7 +11,10 @@ export default function WinAlert(
             {props.text && <div className="win-alert__text">{props.text}</div>}
             <div className="win-alert__buttons">
                 {props.buttons.map((button, i) => (
-                    <button key={i} {...button}>{button.children}</button>
+                    <button key={i} onClick={() => {
+                        if (button.onClick)
+                            button.onClick(props.map);
+                    }}>{button.children}</button>
                 ))}
             </div>
         </div>

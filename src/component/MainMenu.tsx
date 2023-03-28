@@ -1,6 +1,6 @@
 import '../styles/MainMenu.scss'
 import {Link} from "react-router-dom";
-import {getLocalData} from "../ts/LocalData";
+import {getLocalData, withLocalData} from "../ts/LocalData";
 
 export function MainMenu() {
     const campaignLevel = getLocalData()
@@ -14,8 +14,11 @@ export function MainMenu() {
                 <Link to={`/campaign/` + campaignLevel.reachedCampaignLevel} className="main-menu__button">Continue</Link>}
                 <Link to={"/campaign"} tabIndex={1} className="main-menu__button" onClick={(e) => {
                     if (canContinue && !window.confirm("Are you sure you want to start a new game? All progress will be lost.")) {
-                        e.preventDefault(); // prevent navigation
+                        return e.preventDefault(); // prevent navigation
                     }
+                    withLocalData((localData) => {
+                        localData.reachedCampaignLevel = 0;
+                    })
                 }
                 }>Start {canContinue?"Over":""}</Link>
                 <Link to={"/own"} tabIndex={2} className="main-menu__button">My Maps</Link>
