@@ -3,6 +3,8 @@ import {MapGrid} from "./MapGrid";
 import {Position} from "../ts/IGame";
 import brickWall from "../svg/brick-wall.svg";
 import { ReactComponent as Export} from "../svg/save.svg";
+import { ReactComponent as New} from "../svg/group-1.svg";
+import { ReactComponent as Clear} from "../svg/grid-eraser.svg";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
 import {useNavigate, useParams} from "react-router-dom";
 import {getLocalData, withLocalData} from "../ts/LocalData";
@@ -198,6 +200,41 @@ export default function Editor() {
                                          fontSize: "0" // centers the icon
                                      }}
                                      onClick={() => exportMap()}><Export style={{
+                                     stroke: "white",
+                                     width: "calc(var(--cell-size) / 2)",
+                                 }}/></button>
+                             </div>),
+                             [state.size.x * state.size.y - 2]: (<div
+                                 className="cell flex flex-row flex-center" key={state.size.x * state.size.y - 2}
+                                 style={{backgroundImage: `url(${brickWall})`}}>
+                                 <button
+                                     className="btn-reset btn-size"
+                                     title="Clear Map"
+                                     style={{
+                                         backgroundSize: "cover",
+                                         fontSize: "0" // centers the icon
+                                     }}
+                                     onClick={() => {
+                                         setState({
+                                            ...state,
+                                            map: state.map.map(row => row.replace(/[^W]/g, ' '))
+                                         })
+                                     }}><Clear style={{
+                                     stroke: "white",
+                                     width: "calc(var(--cell-size) / 2)",
+                                 }}/></button>
+                             </div>),
+                             [state.size.x * state.size.y - 3]: (<div
+                                 className="cell flex flex-row flex-center" key={state.size.x * state.size.y - 3}
+                                 style={{backgroundImage: `url(${brickWall})`}}>
+                                 <button
+                                     className="btn-reset btn-size"
+                                     title="New Map"
+                                     style={{
+                                         backgroundSize: "cover",
+                                         fontSize: "0" // centers the icon
+                                     }}
+                                     onClick={() => navigate("/editor")}><New style={{
                                      stroke: "white",
                                      width: "calc(var(--cell-size) / 2)",
                                  }}/></button>

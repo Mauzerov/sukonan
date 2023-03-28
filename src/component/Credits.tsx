@@ -13,6 +13,7 @@ export default function Credits() {
                     <li>Teleporter Spiral Icon: @game-icons.net</li>
                     <li>Save Icon: @Ananthanath A X Kalaiism</li>
                     <li>Trashcan: @brankic1979</li>
+                    <li>Clear Editor: @Iconsax</li>
                 </ul>
             </div>
         </div>
