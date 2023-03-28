@@ -49,7 +49,7 @@ export default function Editor() {
 
     const exportMap = useCallback(() => {
         const map = state.map.slice(
-            1, state.size.y - 2
+            1, state.size.y - 1
         ).map(it => it.slice(1, state.size.x - 1))
         withLocalData((localData) => {
             if (state.ownMapIndex === undefined)
@@ -59,7 +59,7 @@ export default function Editor() {
 
         alert("Map saved! You can now access it in the game menu.");
         if (state.ownMapIndex === undefined)
-            navigate(`/editor/${getLocalData().personalMaps.length - 1}`, {replace: true})
+            navigate(`/editor/${getLocalData().personalMaps.length - 1}`)
     }, [state, navigate])
 
     const nextElement = useCallback((element: string, delta: number) => {
