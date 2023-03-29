@@ -174,9 +174,10 @@ function GameMap(props: GameProps & {map: number}) {
 
     const handleTouchStart = useCallback((event: TouchEvent) => {
         let target = event.target as HTMLElement;
-        if (target instanceof HTMLSpanElement) {
+
+        while (!target.classList.contains("cell"))
             target = target.parentElement as HTMLElement;
-        }
+        
         let grid = target.parentElement as HTMLElement;
         if (grid === null || !grid.children) return;
 
