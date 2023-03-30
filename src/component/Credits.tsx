@@ -14,6 +14,7 @@ export default function Credits() {
                     <li>Save Icon: @Ananthanath A X Kalaiism</li>
                     <li>Trashcan: @brankic1979</li>
                     <li>Clear Editor: @Iconsax</li>
+                    <li>Play Icon: @bypeople</li>
                 </ul>
             </div>
         </div>

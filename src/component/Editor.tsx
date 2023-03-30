@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {MapGrid} from "./MapGrid";
 import {Position} from "../ts/IGame";
-import brickWall from "../svg/brick-wall.svg";
 import { ReactComponent as Export} from "../svg/save.svg";
 import { ReactComponent as New} from "../svg/group-1.svg";
 import { ReactComponent as Clear} from "../svg/grid-eraser.svg";
+import { ReactComponent as Play} from "../svg/play.svg";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
 import {useNavigate, useParams} from "react-router-dom";
 import {getLocalData, withLocalData} from "../ts/LocalData";
@@ -277,9 +277,9 @@ export default function Editor() {
                                         if (window.confirm("Are you sure you want to play map?\nUnsaved progress will be lost forever."))
                                             navigate(`/own/` + state.ownMapIndex);
                                     }}
-                                ><Clear style={{
-                                     stroke: "white",
-                                     width: "calc(var(--cell-size) / 2)",}
+                                ><Play style={{
+                                     fill: "white",
+                                     width: "calc(var(--cell-size) / 3)",}
                                  }/></button>
                              </div>)})
                          }
