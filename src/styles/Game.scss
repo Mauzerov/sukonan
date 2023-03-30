@@ -18,6 +18,10 @@
     font-size: var(--size-medium);
     overflow-x: visible;
   }
+
+  button:disabled {
+    opacity: .6;
+  }
 }
 
 .campaign-victory {

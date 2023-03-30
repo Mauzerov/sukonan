@@ -196,7 +196,7 @@ export default function Editor() {
                                  <button
                                      className="btn-reset btn-size"
                                      title="Increase Y"
-                                        disabled={!canResize({x: state.size.x, y: state.size.y + 1})}
+                                     disabled={!canResize({x: state.size.x, y: state.size.y + 1})}
                                      onClick={() => resizeMap(0, 1)}>+</button>
                              </div>),
                              [state.size.x * state.size.y - 1]: (<div
