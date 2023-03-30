@@ -20,6 +20,7 @@ export const defaultMap : string[] = _defaultMap.match(new RegExp(`.{1,${minSize
 export default function Editor() {
     const {mapId} = useParams();
     const navigate = useNavigate();
+
     console.log("render")
     const [state, setState] = useState<{
         map: string[],
@@ -102,6 +103,13 @@ export default function Editor() {
     const onLeftClick  = (index: number) => shuffleCell(index, 1);
     const onRightClick = (index: number) => shuffleCell(index, -1);
 
+    const canResize = useCallback((new_size: Position) => {
+        const min = Math.min(new_size.x, new_size.y);
+        const max = Math.max(new_size.x, new_size.y);
+        const minPlusLog = min + (min / Math.log(min));
+        return minPlusLog > max
+    }, [])
+
     const resizeMap = useCallback((deltaX: number, deltaY: number) => {
         if (state.size.x + deltaX < minSize || state.size.y + deltaY < minSize) return;
         let map = [...state.map];
@@ -166,32 +174,33 @@ export default function Editor() {
                      custom={
                          {
                              [state.size.x - 1]: (<div
-                                 className="cell flex-row" key={state.size.x  - 1}
-                                 style={{backgroundImage: `url(${brickWall})`,}}>
+                                 className="cell flex-row" key={state.size.x  - 1}>
                                  <button
                                      className="btn-reset btn-size"
                                      title="Reduce X"
+                                     disabled={!canResize({x: state.size.x - 1, y: state.size.y})}
                                      onClick={() => resizeMap(-1, 0)}>-</button>
                                  <button
                                      className="btn-reset btn-size"
                                      title="Increase X"
+                                     disabled={!canResize({x: state.size.x + 1, y: state.size.y})}
                                      onClick={() => resizeMap(1, 0)}>+</button>
                              </div>),
                              [state.size.x * (state.size.y - 1)]: (<div
-                                 className="cell flex-row" key={state.size.x * (state.size.y - 1)}
-                                 style={{backgroundImage: `url(${brickWall})`,}}>
+                                 className="cell flex-row" key={state.size.x * (state.size.y - 1)}>
                                  <button
                                      className="btn-reset btn-size"
                                      title="Reduce Y"
+                                     disabled={!canResize({x: state.size.x, y: state.size.y - 1})}
                                      onClick={() => resizeMap(0, -1)}>-</button>
                                  <button
                                      className="btn-reset btn-size"
                                      title="Increase Y"
+                                        disabled={!canResize({x: state.size.x, y: state.size.y + 1})}
                                      onClick={() => resizeMap(0, 1)}>+</button>
                              </div>),
                              [state.size.x * state.size.y - 1]: (<div
-                                 className="cell flex flex-row flex-center" key={state.size.x * state.size.y - 1}
-                                 style={{backgroundImage: `url(${brickWall})`}}>
+                                 className="cell flex flex-row flex-center" key={state.size.x * state.size.y - 1}>
                                  <button
                                      className="btn-reset btn-size"
                                      title="Save Map"
@@ -205,8 +214,7 @@ export default function Editor() {
                                  }}/></button>
                              </div>),
                              [state.size.x * state.size.y - 2]: (<div
-                                 className="cell flex flex-row flex-center" key={state.size.x * state.size.y - 2}
-                                 style={{backgroundImage: `url(${brickWall})`}}>
+                                 className="cell flex flex-row flex-center" key={state.size.x * state.size.y - 2}>
                                  <button
                                      className="btn-reset btn-size"
                                      title="Clear Map"
@@ -225,8 +233,7 @@ export default function Editor() {
                                  }}/></button>
                              </div>),
                              [state.size.x * state.size.y - 3]: (<div
-                                 className="cell flex flex-row flex-center" key={state.size.x * state.size.y - 3}
-                                 style={{backgroundImage: `url(${brickWall})`}}>
+                                 className="cell flex flex-row flex-center" key={state.size.x * state.size.y - 3}>
                                  <button
                                      className="btn-reset btn-size"
                                      title="New Map"
@@ -243,7 +250,6 @@ export default function Editor() {
                                  title="Main Menu"
                                  className="cell" key={0}
                                  style={{
-                                     backgroundImage: `url(${brickWall})`,
                                      lineHeight: 'calc(var(--cell-size))',
                                      fontSize: 'calc(var(--cell-size) * 0.5)',
                                      color: 'white',
@@ -256,7 +262,26 @@ export default function Editor() {
                                          navigate('/');
                                  }}
                              >SukOnAn
-                             </div>)
+                             </div>),
+                            ...(state.ownMapIndex !== undefined && {[state.size.x - 2]: (<div
+                                 className="cell flex flex-row flex-center" key={state.size.x - 2}>
+                                 <button
+                                    className="btn-reset btn-size"
+                                    title="Play Saved Map"
+                                    style={{
+                                        backgroundSize: "cover",
+                                        fontSize: "0" // centers the icon
+                                    }}
+                                    onClick={() => {
+                                        // navigate to own map
+                                        if (window.confirm("Are you sure you want to play map?\nUnsaved progress will be lost forever."))
+                                            navigate(`/own/` + state.ownMapIndex);
+                                    }}
+                                ><Clear style={{
+                                     stroke: "white",
+                                     width: "calc(var(--cell-size) / 2)",}
+                                 }/></button>
+                             </div>)})
                          }
                      }
             />

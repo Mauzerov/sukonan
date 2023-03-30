@@ -233,13 +233,11 @@ function GameMap(props: GameProps & {map: number}) {
                     {
                         [gameState.width - 1]: (<div
                             className="cell flex-center" key={gameState.width - 1}
-                            style={{ backgroundImage: `url(${brickWall})`}}
                             onClick={() => setGameState(configureMap(mapToParse))}
                         ><button style={{ backgroundImage: `url(${refresh})` }} className="btn-reset btn" title="Restart"></button>
                         </div>),
                         3: (<div
                             className="cell flex-center" key={3}
-                            style={{backgroundImage: `url(${brickWall})`}}
                             onClick={() => setGameState((old) => ({ ...old, credits: !old.credits }))}
                         ><button style={{backgroundImage: `url(${info})`}} className="btn-reset btn" title={gameState.credits ? 'Close' : 'Info'}></button>
                         </div>),
@@ -247,7 +245,6 @@ function GameMap(props: GameProps & {map: number}) {
                             title="Main Menu"
                             className="cell" key={0}
                             style={{
-                                backgroundImage: `url(${brickWall})`,
                                 lineHeight: 'calc(var(--cell-size))',
                                 fontSize: 'calc(var(--cell-size) * 0.5)',
                                 color: 'white',
