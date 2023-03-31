@@ -225,7 +225,11 @@ export default function Editor() {
                                      onClick={() => {
                                          setState({
                                             ...state,
-                                            map: state.map.map(row => row.replace(/[^W]/g, ' '))
+                                            map: [
+                                                "W".repeat(state.size.x),
+                                                ...Array.from({length: state.size.y - 2}, () => `W${" ".repeat(state.size.x - 2)}W`),
+                                                "W".repeat(state.size.x)
+                                                ]
                                          })
                                      }}><Clear style={{
                                      stroke: "white",
