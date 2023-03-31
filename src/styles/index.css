@@ -1,10 +1,24 @@
 :root {
-  --size-xsmall: calc(100dvmin / 32);
-  --size-small: calc(100dvmin / 24);
-  --size-medium: calc(100dvmin / 16);
-  --size-large: calc(100dvmin / 8);
   --body-bg: #2c3e50;
 }
+
+:root {
+  --size-xsmall: calc(100vmin / 32);
+  --size-small: calc(100vmin / 24);
+  --size-medium: calc(100vmin / 16);
+  --size-large: calc(100vmin / 8);
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --size-xsmall: calc(100dvmin / 32);
+    --size-small: calc(100dvmin / 24);
+    --size-medium: calc(100dvmin / 16);
+    --size-large: calc(100dvmin / 8);
+  }
+}
+
+
 
 *, *::after, *::before {
   box-sizing: border-box;

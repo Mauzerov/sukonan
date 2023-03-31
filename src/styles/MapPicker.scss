@@ -38,6 +38,7 @@
     width: 100%;
   }
 
+  width: calc(100vmin - 2em);
   width: calc(100dvmin - 2em);
   grid-template-columns: repeat(min(3, var(--own-map-count)), auto);
 
