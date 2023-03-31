@@ -217,10 +217,6 @@ function GameMap(props: GameProps & {map: number}) {
         <div style={
             {
                 position: 'relative',
-                "--cell-size": `min(
-                                    calc(100dvh / ${gameState.height}),
-                                    calc(100dvw / ${gameState.width})
-                                   )`,
                 overflowX: 'hidden',
             } as React.CSSProperties
         }>

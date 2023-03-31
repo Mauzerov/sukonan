@@ -27,6 +27,7 @@
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
 
   &__title {
+    font-size: 10vw;
     font-size: 10dvw;
     font-weight: bold;
     color: whitesmoke;
@@ -35,6 +36,7 @@
 
   &__button {
     @include button-outline(#a29bfe, #6c5ce7);
+    font-size: max(2em, 2vh);
     font-size: max(2em, 2dvh);
     margin-block: .3em;
     width: 100%;

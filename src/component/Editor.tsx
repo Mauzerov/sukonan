@@ -151,17 +151,8 @@ export default function Editor() {
         x: playerPosition % state.size.x,
         y: ~~(playerPosition / state.size.x)
     }
-
     return (
-        <div key={state.ownMapIndex} style={
-            {
-                position: 'relative',
-                "--cell-size": `min(
-                                    calc(100dvh / ${state.size.y}),
-                                    calc(100dvw / ${state.size.x})
-                                   )`,
-            } as React.CSSProperties
-        }>
+        <div key={state.ownMapIndex} style={{ position: 'relative'}}>
             <MapGrid gameElements={{
                 player,
                 porters: filterPorters(state.map.join(''), state.size),

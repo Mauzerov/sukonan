@@ -18,14 +18,20 @@ interface MapGridProps {
 export function MapGrid(props: MapGridProps) {
     const pp = props.gameElements.player;
     console.log(props)
+    const supportsDynamicViewPort = CSS.supports("height", "max(100dvh, 100dvw)");
+
     return (
         <div className="map-grid" style={
             {
+                "--cell-size": `min(
+                                    calc(100${supportsDynamicViewPort?"dvh":"vh"} / ${props.gridSize.y}),
+                                    calc(100${supportsDynamicViewPort?"dvw":"vw"} / ${props.gridSize.x})
+                                   )`,
                 display: 'grid',
-                gridTemplate: `repeat(${props.gridSize.y}, var(--cell-size)) / repeat(${props.gridSize.x}, auto)`,
+                gridTemplate: `repeat(${props.gridSize.y}, var(--cell-size)) / repeat(${props.gridSize.x}, var(--cell-size))`,
                 background: "black",
                 // aspectRatio: "1 / 1",
-            }
+            } as React.CSSProperties
         }>
             {props.map.split('').map((element, i) => {
                 if (props.custom && props.custom[i]) {
@@ -100,16 +106,6 @@ export function MapGrid(props: MapGridProps) {
                     ) && <span style={{
                         backgroundImage: `url(${crate})`,
                     }}></span>}
-
-                    { /* title */ }
-                    {/*{ (i === 0) && <span style={{*/}
-                    {/*    margin: 0,*/}
-                    {/*    fontSize:  `min(*/}
-                    {/*            calc(100dvh / ${props.gridSize.y} / 1.5),*/}
-                    {/*            calc(100dvw / ${props.gridSize.x} / 1.5)*/}
-                    {/*        )`,*/}
-                    {/*    color: 'white',*/}
-                    {/*}}>Sukanob</span>}*/}
                 </div>
             })}
         </div>

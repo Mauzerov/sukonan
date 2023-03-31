@@ -22,11 +22,10 @@ export function MapPicker() {
                 No maps found. Create one in the editor.
                 <Link to="/editor" className="button">Editor</Link>
             </div>}
-            {maps && <div
+            {maps.length > 0 && <div
                 className={"map-picker"}
                 style={{
                 display: 'grid',
-                // width: "100%",
                 padding: "1rem",
                 gap: "1rem",
                 overflow: "hidden scroll",
