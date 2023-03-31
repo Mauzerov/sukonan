@@ -2,8 +2,9 @@
   box-shadow: 0 0 1em 1em rgb(0 0 0 / .9);
   position: absolute;
   inset: 0;
-  inset-block: var(--cell-size);
+  inset-block: var(--size-large);
   margin: auto;
+  padding: 1em;
   z-index: 10000;
   background: rgb(0 0 0 / .9);
   color: azure;
