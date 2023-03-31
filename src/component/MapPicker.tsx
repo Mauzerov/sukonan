@@ -40,12 +40,12 @@ export function MapPicker() {
                     const mapString = map.join('');
                     return (
                         <div key={i} style={{
-                            "--cell-size": `auto`,
                             position: 'relative',
                         } as React.CSSProperties}
                         className="map-picker-map"
                         >
                             <MapGrid
+                                cellSize={"auto"}
                                 key={i}
                                 map={mapString}
                                 gameElements={{

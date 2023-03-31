@@ -15,7 +15,7 @@ interface MapGridProps {
     custom?: Record<number, ReactNode>
 }
 
-export function MapGrid(props: MapGridProps) {
+export function MapGrid(props: MapGridProps & {cellSize?:string}) {
     const pp = props.gameElements.player;
     console.log(props)
     const supportsDynamicViewPort = CSS.supports("height", "max(100dvh, 100dvw)");
@@ -23,7 +23,7 @@ export function MapGrid(props: MapGridProps) {
     return (
         <div className="map-grid" style={
             {
-                "--cell-size": `min(
+                "--cell-size": props.cellSize ?? `min(
                                     calc(100${supportsDynamicViewPort?"dvh":"vh"} / ${props.gridSize.y}),
                                     calc(100${supportsDynamicViewPort?"dvw":"vw"} / ${props.gridSize.x})
                                    )`,
