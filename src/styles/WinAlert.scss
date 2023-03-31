@@ -5,7 +5,7 @@
 
   --win-alert-bg: rgb(0 0 0 / .7);
   position: absolute;
-  inset: var(--cell-size) 0;
+  inset: var(--size-large) 0;
   z-index: 99999;
   background: var(--win-alert-bg);
   color: $textColor;
