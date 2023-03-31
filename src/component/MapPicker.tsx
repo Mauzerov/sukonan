@@ -6,12 +6,17 @@ import "../styles/MapPicker.scss"
 import {Link, useNavigate} from "react-router-dom";
 import {getLocalData, withLocalData} from "../ts/LocalData";
 import {ReactComponent as TrashCan} from "../svg/trashcan.svg";
+import {ReactComponent as Home} from "../svg/home.svg";
 
 export function MapPicker() {
     const [maps, setMaps] = useState(getLocalData().personalMaps);
     const navigate = useNavigate();
     return (
         <>
+            <div className="flex flex-row map-picker-header">
+                <div className=""><Link to={"/"} className={"button"} title="Main Menu"><Home /><span>SukOnAn</span></Link></div>
+                <div className="title">Own Maps</div>
+            </div>
             {!maps.length && <div
                 className="map-picker__no-maps">
                 No maps found. Create one in the editor.

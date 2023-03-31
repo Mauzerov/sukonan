@@ -15,6 +15,7 @@ export default function Credits() {
                     <li>Trashcan: @brankic1979</li>
                     <li>Clear Editor: @Iconsax</li>
                     <li>Play Icon: @bypeople</li>
+                    <li>Home Icon: @zest</li>
                 </ul>
             </div>
         </div>
