@@ -6,11 +6,20 @@ export function overlap(position: Position, positions: Position[]): boolean {
 
 export function isValidLevel(level: string) : boolean {
     // if no start point
-    if (level.indexOf("S") === -1) {
+    if (level.indexOf("S") === -1)
         return false;
-    }
+    const targetCount = level.replaceAll(/[^T]/g, "").length;
+    const boxCount    = level.replaceAll(/[^B]/g, "").length;
+
+    // if no target
+    if (!targetCount)
+        return false;
+    // if no box
+    if (!boxCount)
+        return false;
+
     // if more targets than boxes
-    if (level.replaceAll(/[^T]/g, "").length > level.replaceAll(/[^B]/g, "").length) {
+    if (targetCount > boxCount) {
         return false;
     }
 

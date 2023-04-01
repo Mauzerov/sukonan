@@ -8,6 +8,7 @@ import { ReactComponent as Play} from "../svg/play.svg";
 import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
 import {useNavigate, useParams} from "react-router-dom";
 import {getLocalData, withLocalData} from "../ts/LocalData";
+import {isValidLevel} from "../util/Util";
 
 
 export const minSize = 5;
@@ -51,6 +52,18 @@ export default function Editor() {
     }, [mapId]);
 
     const exportMap = useCallback(() => {
+        if (!isValidLevel(state.map.join(""))) {
+            alert("Map is not valid!\n" +
+                "Make sure that:\n" +
+                "- There is only one player\n" +
+                "- There is at least one box\n" +
+                "- There is at least one target\n" +
+                "- There is two or none of each porter color\n"
+            );
+            return;
+        }
+
+
         const map = state.map.slice(
             1, state.size.y - 1
         ).map(it => it.slice(1, state.size.x - 1))
@@ -195,10 +208,7 @@ export default function Editor() {
                                  <button
                                      className="btn-reset btn-size"
                                      title="Save Map"
-                                     style={{
-                                         backgroundSize: "cover",
-                                         fontSize: "0" // centers the icon
-                                     }}
+                                     style={{fontSize: "0" /* centers the icon */}}
                                      onClick={() => exportMap()}><Export style={{
                                      stroke: "white",
                                      width: "calc(var(--cell-size) / 2)",
@@ -209,10 +219,7 @@ export default function Editor() {
                                  <button
                                      className="btn-reset btn-size"
                                      title="Clear Map"
-                                     style={{
-                                         backgroundSize: "cover",
-                                         fontSize: "0" // centers the icon
-                                     }}
+                                     style={{fontSize: "0" /* centers the icon */}}
                                      onClick={() => {
                                          setState({
                                             ...state,
@@ -232,10 +239,7 @@ export default function Editor() {
                                  <button
                                      className="btn-reset btn-size"
                                      title="New Map"
-                                     style={{
-                                         backgroundSize: "cover",
-                                         fontSize: "0" // centers the icon
-                                     }}
+                                     style={{fontSize: "0" /* centers the icon */}}
                                      onClick={() => navigate("/editor")}><New style={{
                                      stroke: "white",
                                      width: "calc(var(--cell-size) / 2)",
@@ -263,10 +267,7 @@ export default function Editor() {
                                  <button
                                     className="btn-reset btn-size"
                                     title="Play Saved Map"
-                                    style={{
-                                        backgroundSize: "cover",
-                                        fontSize: "0" // centers the icon
-                                    }}
+                                    style={{fontSize: "0" /* centers the icon */}}
                                     onClick={() => {
                                         // navigate to own map
                                         if (window.confirm("Are you sure you want to play map?\nUnsaved progress will be lost forever."))
