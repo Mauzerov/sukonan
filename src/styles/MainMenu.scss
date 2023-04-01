@@ -43,10 +43,18 @@
     text-decoration: none !important;
 
     @media (orientation: landscape) {
-      // If there are 5 buttons make first wider
-      &:first-child:nth-last-child(5) {
+      // If there are 6 buttons make first wider
+      &:first-child:nth-last-child(6) {
         grid-column: 1 / 3;
       }
+
+      &:last-child {
+        grid-column: 1 / 3;
+        margin-inline: calc(50% + .3em);
+        width: 50%;
+        transform: translateX(-50%);
+      }
+
       & {
         padding: .25vmax;
         padding: .25dvmax;

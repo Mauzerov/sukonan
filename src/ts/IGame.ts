@@ -38,4 +38,9 @@ export interface WinAlertProps {
     buttons: {children: ReactNode, onClick: (() => void) | ((map: number) => void)}[],
 }
 
+export interface Score {
+    name: string,
+    score: number
+}
+
 

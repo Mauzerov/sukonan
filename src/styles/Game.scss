@@ -58,4 +58,44 @@
     font-size: var(--size-medium);
     padding-inline: 1em;
   }
+
+  &__score {
+    margin-block: 1em;
+    &-value {
+      font-size: var(--size-small);
+      text-align: center;
+
+      strong {
+        color: #a29bfe;
+      }
+    }
+
+    &-player_name {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      * { font-size: var(--size-xsmall); }
+
+      input {
+        background: none;
+        color: white !important;
+        @include button-outline(white);
+        padding-block: .25em;
+        caret-color: white;
+        caret-shape: block;
+
+        &:hover, &:focus, &:focus-visible {
+          background: rgb(255 255 255 / .1);
+        }
+      }
+      input::placeholder {
+        color: white;
+      }
+      button {
+        @include button-outline(white);
+        margin-inline-start: 1em;
+        padding-inline: 1em;
+      }
+    }
+  }
 }

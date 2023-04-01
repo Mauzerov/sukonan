@@ -1,0 +1,58 @@
+.scoreboard {
+  &, & * {
+    color: white;
+  }
+  h1 {
+    font-size: var(--size-large);
+  }
+
+  &__table {
+    table {
+      width: 100%;
+
+      thead {
+        font-size: var(--size-small)
+      }
+      tbody {
+        counter-reset: scoreboard;
+        font-size: var(--size-xsmall);
+        text-align: center;
+
+        td:last-child {
+          color: #a29bfe;
+        }
+
+        tr {
+          counter-increment: scoreboard;
+          &:hover {
+            &, & td::after {
+              background: rgb(255 255 255 / .1);
+            }
+          }
+        }
+
+        td {
+          &:first-child::before {
+            content: counter(scoreboard);
+            display: inline-block;
+            text-align: right;
+          }
+
+          --border-size: 1px;
+          border-top: var(--border-size) solid whitesmoke;
+          position: relative;
+
+          &:not(:last-child)::after {
+            content: "";
+            position: absolute;
+            height: 100%;
+            width: calc(var(--border-size) * 2);
+            border-top: inherit;
+            left: calc(100%);
+            top: calc(var(--border-size) * -1);
+          }
+        }
+      }
+    }
+  }
+}

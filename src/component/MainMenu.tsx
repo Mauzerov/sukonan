@@ -25,6 +25,7 @@ export function MainMenu() {
                 <Link to={"/editor"} tabIndex={3} className="main-menu__button">Editor</Link>
                 <Link to={"/settings"} tabIndex={4} className="main-menu__button">Settings</Link>
                 <Link to={"/credits"} tabIndex={5} className="main-menu__button">Credits</Link>
+                <Link to={"/scoreboard"} tabIndex={5} className="main-menu__button">Scoreboard</Link>
             </div>
         </div>
     )

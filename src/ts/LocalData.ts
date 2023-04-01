@@ -1,11 +1,20 @@
+import {Score} from "./IGame";
+
 export default interface LocalData {
     personalMaps: string[][],
     reachedCampaignLevel: number,
+    scoreboard: {name: string, score: number}[],
+    currentPlayerScore: Score,
 }
 
 export const defaultLocalData: LocalData = {
     personalMaps: [],
     reachedCampaignLevel: 0,
+    scoreboard: [],
+    currentPlayerScore: {
+        name: "",
+        score: 0
+    },
 }
 
 export function getLocalData(): LocalData {

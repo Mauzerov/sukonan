@@ -10,6 +10,7 @@ import {getLocalData, withLocalData} from "./ts/LocalData";
 import Settings from "./component/Settings";
 import Credits from "./component/Credits";
 import CampaignVictory from "./component/Victory";
+import Scoreboard from "./component/Scoreboard";
 
 export function App() {
     const [keyMap, setKeyMap] = useState(getKeyMap);
@@ -31,6 +32,12 @@ export function App() {
                             withLocalData((localData) => {
                                 if (localData.reachedCampaignLevel <= current)
                                     localData.reachedCampaignLevel = current + 1;
+                            })
+                        }}
+                        onMove={(delta: number) => {
+                            console.assert(delta >= 0)
+                            return withLocalData((localData) => {
+                                localData.currentPlayerScore.score += delta;
                             })
                         }}
                         winMessage={{
@@ -75,6 +82,7 @@ export function App() {
                     keymap={keyMap}
                     onKeyMapChange={(k) => { setKeyMap({...k}); saveKeyMap(k); }}/>} />
                 <Route path="/credits" element={<Credits/>} />
+                <Route path="/scoreboard" element={<Scoreboard scores={getLocalData().scoreboard}/>} />
                 <Route path="/*" element={<div>404</div>} />
             </Routes>
         </>

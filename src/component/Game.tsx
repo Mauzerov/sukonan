@@ -12,8 +12,9 @@ import {filterBoxesAndTargets, filterPorters} from "../util/GameUtil";
 import {Navigate, useNavigate, useParams} from 'react-router-dom';
 import {campaignLevels} from "../ts/const";
 import WinAlert from "./WinAlert";
+import {defaultLocalData, withLocalData} from "../ts/LocalData";
 
-function GameMap(props: GameProps & {map: number}) {
+function GameMap(props: GameProps & {map: number, onMove?: (moveNumber: number) => void}) {
     const navigate = useNavigate();
 
     const mapToParse = (props.mapPool || campaignLevels)[props.map];
@@ -108,6 +109,8 @@ function GameMap(props: GameProps & {map: number}) {
                 // Box did move, update state
                 gameState.boxes[i] = newBoxPosition;
             }
+
+            props.onMove?.(1);
             return true;
         }
 
@@ -266,7 +269,7 @@ function GameMap(props: GameProps & {map: number}) {
         </div>
     );
 }
-export default function Game(props: GameProps) {
+export default function Game(props: GameProps & {onMove?: (moveNumber: number) => void}) {
     const {mapId} = useParams();
 
     if (mapId === undefined) return <Navigate to="/" replace/>
@@ -275,6 +278,12 @@ export default function Game(props: GameProps) {
 
     for (let condition of (props.conditions || [])) {
         if (condition.func(+mapId)) return condition.element as any ;
+    }
+
+    if (+mapId === 0) {
+        withLocalData((localData) => {
+            localData.currentPlayerScore = {...defaultLocalData.currentPlayerScore};
+        })
     }
 
     return (<GameMap {...props} map={+(mapId)} key={mapId} />)
