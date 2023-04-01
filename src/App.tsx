@@ -2,7 +2,7 @@ import {useState} from "react";
 import {MainMenu} from "./component/MainMenu";
 import Editor from "./component/Editor";
 import Game from "./component/Game";
-import {defaultKeyMap, saveKeyMap, getKeyMap} from "./ts/KeyMap";
+import {saveKeyMap, getKeyMap} from "./ts/KeyMap";
 import {MapPicker} from "./component/MapPicker";
 import {Route, Routes, Navigate, useNavigate} from "react-router-dom";
 import {campaignLevels} from "./ts/const";

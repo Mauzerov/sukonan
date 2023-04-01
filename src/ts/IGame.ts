@@ -1,6 +1,6 @@
 import KeyMap from "./KeyMap";
 import Teleporter from "./Teleporter";
-import {ButtonHTMLAttributes, ReactNode} from "react";
+import {ReactNode} from "react";
 
 
 export interface Position {

@@ -1,6 +1,6 @@
 import "../styles/GameMenu.scss"
 import KeyMap from "../ts/KeyMap";
-import React, {useEffect, useState} from "react";
+import React from "react";
 import Settings from "./Settings";
 import Credits from "./Credits";
 

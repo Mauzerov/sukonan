@@ -1,5 +1,4 @@
 import React, {useCallback, useEffect} from 'react';
-import brickWall from "../svg/brick-wall.svg";
 import refresh from "../svg/refresh.svg";
 import info from "../svg/info.svg";
 import { Position, GameState, GameProps } from '../ts/IGame';
