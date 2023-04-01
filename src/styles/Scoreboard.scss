@@ -48,7 +48,7 @@
             height: 100%;
             width: calc(var(--border-size) * 2);
             border-top: inherit;
-            left: calc(100%);
+            left: 100%;
             top: calc(var(--border-size) * -1);
           }
         }
