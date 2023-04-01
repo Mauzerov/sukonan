@@ -16,6 +16,7 @@
 
 .btn-size {
   font-size: calc(var(--cell-size) / 2);
+  background-size: cover;
   text-align: center;
   flex: 1;
   max-width: 50%;;
