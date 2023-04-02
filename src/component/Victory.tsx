@@ -13,6 +13,11 @@ export default function CampaignVictory() {
     if (localData.reachedCampaignLevel < campaignLevels.length)
         return <Navigate to={`/campaign/${getLocalData().reachedCampaignLevel}`} replace/>;
 
+    if (localData.reachedCampaignLevel === campaignLevels.length + 1) {
+        // The user has already entered the scoreboard and saved his score
+        return <Navigate to={`/`} replace />;
+    }
+
     return (
         <div className="campaign-victory">
             <div className="campaign-victory__title">Victory!</div>
@@ -32,6 +37,7 @@ export default function CampaignVictory() {
                                 name: playerName,
                                 score: localData.currentPlayerScore.score
                             });
+                            localData.reachedCampaignLevel++; // To prevent the user from entering the scoreboard again
                         });
                         setSaved(true);
                     }}>Accept</button>}

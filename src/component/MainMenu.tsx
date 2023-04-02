@@ -5,7 +5,7 @@ import {campaignLevels} from "../ts/const";
 
 export function MainMenu() {
     const campaignLevel = getLocalData()
-    const canContinue = campaignLevel.reachedCampaignLevel > 0 && campaignLevel.reachedCampaignLevel !== campaignLevels.length;
+    const canContinue = campaignLevel.reachedCampaignLevel > 0 && campaignLevel.reachedCampaignLevel <= campaignLevels.length;
 
     return (
         <div className="main-menu">
