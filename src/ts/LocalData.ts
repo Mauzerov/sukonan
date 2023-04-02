@@ -29,9 +29,22 @@ function setLocalData(localData: LocalData) {
     localStorage.setItem("localData", JSON.stringify(localData));
 }
 
+let localDataSyncTimer: any = null;
+let localData: LocalData = getLocalData();
+
 export function withLocalData<T>(callback: (localData: LocalData) => T): T {
-    const localData = getLocalData();
-    const result = callback(localData);
+    if (localDataSyncTimer) {
+        clearTimeout(localDataSyncTimer);
+    }
+
+    localDataSyncTimer = setTimeout(() => {
+        console.log("Syncing local data...")
+        setLocalData(localData as LocalData);
+    }, 250);
+
+    return callback(localData);
+}
+
+window.onunload = () => {
     setLocalData(localData);
-    return result;
 }
