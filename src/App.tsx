@@ -83,7 +83,7 @@ export function App() {
                     onKeyMapChange={(k) => { setKeyMap({...k}); saveKeyMap(k); }}/>} />
                 <Route path="/credits" element={<Credits/>} />
                 <Route path="/scoreboard" element={<Scoreboard scores={getLocalData().scoreboard}/>} />
-                <Route path="/*" element={<div>404</div>} />
+                <Route path="/*" element={<div style={{fontSize: "var(--size-large)", color: "white"}}>404</div>} />
             </Routes>
         </>
     )
