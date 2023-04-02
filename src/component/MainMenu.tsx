@@ -1,10 +1,11 @@
 import '../styles/MainMenu.scss'
 import {Link} from "react-router-dom";
 import {getLocalData, withLocalData} from "../ts/LocalData";
+import {campaignLevels} from "../ts/const";
 
 export function MainMenu() {
     const campaignLevel = getLocalData()
-    const canContinue = campaignLevel.reachedCampaignLevel > 0;
+    const canContinue = campaignLevel.reachedCampaignLevel > 0 && campaignLevel.reachedCampaignLevel !== campaignLevels.length;
 
     return (
         <div className="main-menu">
