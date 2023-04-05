@@ -10,14 +10,12 @@ export default function WinAlert(
 
     useEffect(() => {
         if (disabled) {
-            setTimeout(() => {
-                setDisabled(false);
-            }, 250);
+            setTimeout(() => { setDisabled(false);}, 250);
         }
     }, [disabled])
 
     return (
-        <div className="win-alert">
+        <div className="win-alert" style={{...(disabled && {display: "none"})}}>
             <div className="win-alert__title">{props.title}</div>
             {props.text && <div className="win-alert__text">{props.text}</div>}
             <div className="win-alert__buttons">
